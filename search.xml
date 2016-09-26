@@ -4,26 +4,6 @@
   
     
     <entry>
-      <title></title>
-      <url>http://lionwy.github.io/Hexo%20%E7%AE%80%E5%8D%95%E5%91%BD%E4%BB%A4/</url>
-      <content type="html"><![CDATA[<h1 id="Hexo-常用命令"><a href="#Hexo-常用命令" class="headerlink" title="Hexo 常用命令"></a>Hexo 常用命令</h1><blockquote>
-<p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">官方文档</a></p>
-</blockquote>
-<ol>
-<li><p>把本地文件上传blog</p>
-<pre><code>hexo clean
-hexo generate
-hexo deploy
-</code></pre></li>
-<li><p>新建文章</p>
-<pre><code>hexo new “文章题目”
-</code></pre></li>
-<li></li>
-</ol>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[记录Effective Objective-C 2.0笔记]]></title>
       <url>http://lionwy.github.io/%E8%AE%B0%E5%BD%95Effective%20Objective-C%202.0%E7%AC%94%E8%AE%B0/</url>
       <content type="html"><![CDATA[<h1 id="第一章-熟悉Objective-C"><a href="#第一章-熟悉Objective-C" class="headerlink" title="第一章 熟悉Objective-C"></a>第一章 熟悉Objective-C</h1><blockquote>
@@ -48,6 +28,28 @@ hexo deploy
 <p><a href="https://github.com/LionWY/Read_Notes/blob/master/Effective%20Objective-C%202.0%20%E7%BC%96%E5%86%99%E9%AB%98%E8%B4%A8%E9%87%8FiOS%E4%B8%8EOS%20X%E4%BB%A3%E7%A0%81%E7%9A%8452%E4%B8%AA%E6%9C%89%E6%95%88%E6%96%B9%E6%B3%95/12.%E7%90%86%E8%A7%A3%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91%E6%9C%BA%E5%88%B6.md#%E7%90%86%E8%A7%A3%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91" target="_blank" rel="external">理解消息转发</a></p>
 <p><a href="https://github.com/LionWY/Read_Notes/blob/master/Effective%20Objective-C%202.0%20%E7%BC%96%E5%86%99%E9%AB%98%E8%B4%A8%E9%87%8FiOS%E4%B8%8EOS%20X%E4%BB%A3%E7%A0%81%E7%9A%8452%E4%B8%AA%E6%9C%89%E6%95%88%E6%96%B9%E6%B3%95/13.%E7%94%A8%E6%96%B9%E6%B3%95%E8%B0%83%E9%85%8D%E6%8A%80%E6%9C%AF%E8%B0%83%E8%AF%95%E9%BB%91%E7%9B%92%E6%96%B9%E6%B3%95.md#%E7%94%A8%E6%96%B9%E6%B3%95%E8%B0%83%E9%85%8D%E6%8A%80%E6%9C%AF%E8%B0%83%E8%AF%95%E9%BB%91%E7%9B%92%E6%96%B9%E6%B3%95" target="_blank" rel="external">用“方法调配技术”调试“黑盒方法”</a></p>
 <p><a href="https://github.com/LionWY/Read_Notes/blob/master/Effective%20Objective-C%202.0%20%E7%BC%96%E5%86%99%E9%AB%98%E8%B4%A8%E9%87%8FiOS%E4%B8%8EOS%20X%E4%BB%A3%E7%A0%81%E7%9A%8452%E4%B8%AA%E6%9C%89%E6%95%88%E6%96%B9%E6%B3%95/14.%E7%90%86%E8%A7%A3%E7%B1%BB%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%94%A8%E6%84%8F.md#%E7%90%86%E8%A7%A3%E7%B1%BB%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%94%A8%E6%84%8F" target="_blank" rel="external">理解类对象的用意</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[记录Effective Objective-C 2.0笔记]]></title>
+      <url>http://lionwy.github.io/Hexo%20%E7%AE%80%E5%8D%95%E5%91%BD%E4%BB%A4/</url>
+      <content type="html"><![CDATA[<h1 id="Hexo-常用命令"><a href="#Hexo-常用命令" class="headerlink" title="Hexo 常用命令"></a>Hexo 常用命令</h1><blockquote>
+<p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">官方文档</a></p>
+</blockquote>
+<ol>
+<li><p>把本地文件上传blog</p>
+<pre><code>hexo clean
+hexo generate
+hexo deploy
+</code></pre></li>
+<li><p>新建文章</p>
+<pre><code>hexo new “文章题目”
+</code></pre></li>
+<li><p>新建另一页（如关于，标签，分类）</p>
+<pre><code>hexo new page &quot;about&quot;
+</code></pre></li>
+</ol>
 ]]></content>
     </entry>
     
