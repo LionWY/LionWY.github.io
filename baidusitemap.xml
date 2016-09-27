@@ -5,31 +5,41 @@
     
   <url>
     <loc>http://lionwy.github.io/Hexo%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
-    <lastmod>2016-09-26T09:41:25.000Z</lastmod>
+    <lastmod>2016-09-27T09:39:28.000Z</lastmod>
     <data>
         <display>
-        <title>Hexo常用命令</title>
+        <title>Hexo 常用命令</title>
         <pubTime>2016-09-26T09:40:36.000Z</pubTime>
         
+        <tag>hexo，</tag>
+         
          
            
+             
+              <breadCrumb title="博客" url="http://lionwy.github.io/categories/%E5%8D%9A%E5%AE%A2/"/>
+          
         </display>
     </data>
     </url>
 
     
   <url>
-    <loc>http://lionwy.github.io/%E8%AE%B0%E5%BD%95Effective%20Objective-C%202.0%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2016-09-26T09:37:24.000Z</lastmod>
+    <loc>http://lionwy.github.io/%E8%AE%B0%E5%BD%95Effective%20Objective-C%202.0%20%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2016-09-27T09:33:38.000Z</lastmod>
     <data>
         <display>
-        <title>记录Effective Objective-C 2.0笔记</title>
+        <title>记录Effective Objective-C 2.0 笔记</title>
         <pubTime>2016-09-12T09:04:50.000Z</pubTime>
         
-        <tag>读书笔记，</tag>
+        <tag>读书学习</tag>
+         
+        <tag>OC原理</tag>
          
          
            
+             
+              <breadCrumb title="书架" url="http://lionwy.github.io/categories/%E4%B9%A6%E6%9E%B6/"/>
+          
         </display>
     </data>
     </url>

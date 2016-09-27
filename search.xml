@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title><![CDATA[Hexo常用命令]]></title>
+      <title><![CDATA[Hexo 常用命令]]></title>
       <url>http://lionwy.github.io/Hexo%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
       <content type="html"><![CDATA[<h1 id="Hexo-常用命令"><a href="#Hexo-常用命令" class="headerlink" title="Hexo 常用命令"></a>Hexo 常用命令</h1><blockquote>
 <p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">官方文档</a></p>
@@ -21,13 +21,35 @@ hexo deploy
 <li><p>新建另一页（如关于，标签，分类）</p>
 <pre><code>hexo new page &quot;about&quot;
 </code></pre></li>
+<li><p>分类下显示你所编写的标签</p>
+<pre><code>---
+title: categories
+date: 2016-09-14 11:54:11
+type: &quot;categories&quot; #这句话不能少
+comments: false   #去除多说评论框
+
+---
+</code></pre></li>
+<li><p>添加多说评论</p>
+<ul>
+<li><p><a href="http://duoshuo.com/" target="_blank" rel="external">多说官网</a> “我要安装”</p>
+</li>
+<li><p>在 next 主题设置shortName</p>
+<pre><code># Duoshuo ShortName #不能去掉注释 
+duoshuo_shortname: your_short_name
+</code></pre></li>
+</ul>
+</li>
+<li><p>文章添加多个标签</p>
+<pre><code>tags: [tag1,tag2,tag3] #冒号后面添加空格
+</code></pre></li>
 </ol>
 ]]></content>
     </entry>
     
     <entry>
-      <title><![CDATA[记录Effective Objective-C 2.0笔记]]></title>
-      <url>http://lionwy.github.io/%E8%AE%B0%E5%BD%95Effective%20Objective-C%202.0%E7%AC%94%E8%AE%B0/</url>
+      <title><![CDATA[记录Effective Objective-C 2.0 笔记]]></title>
+      <url>http://lionwy.github.io/%E8%AE%B0%E5%BD%95Effective%20Objective-C%202.0%20%E7%AC%94%E8%AE%B0/</url>
       <content type="html"><![CDATA[<h1 id="第一章-熟悉Objective-C"><a href="#第一章-熟悉Objective-C" class="headerlink" title="第一章 熟悉Objective-C"></a>第一章 熟悉Objective-C</h1><blockquote>
 <p>OC是在C语言的基础上添加了面向对象特性</p>
 </blockquote>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lionwy.github.io/"/>
-  <updated>2016-09-26T09:41:25.000Z</updated>
+  <updated>2016-09-27T09:39:28.000Z</updated>
   <id>http://lionwy.github.io/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hexo常用命令</title>
+    <title>Hexo 常用命令</title>
     <link href="http://lionwy.github.io/Hexo%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
     <id>http://lionwy.github.io/Hexo常用命令/</id>
     <published>2016-09-26T09:40:36.000Z</published>
-    <updated>2016-09-26T09:41:25.000Z</updated>
+    <updated>2016-09-27T09:39:28.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="Hexo-常用命令"><a href="#Hexo-常用命令" class="headerlink" title="Hexo 常用命令"></a>Hexo 常用命令</h1><blockquote>
 <p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">官方文档</a></p>
@@ -37,6 +37,28 @@ hexo deploy
 <li><p>新建另一页（如关于，标签，分类）</p>
 <pre><code>hexo new page &quot;about&quot;
 </code></pre></li>
+<li><p>分类下显示你所编写的标签</p>
+<pre><code>---
+title: categories
+date: 2016-09-14 11:54:11
+type: &quot;categories&quot; #这句话不能少
+comments: false   #去除多说评论框
+
+---
+</code></pre></li>
+<li><p>添加多说评论</p>
+<ul>
+<li><p><a href="http://duoshuo.com/" target="_blank" rel="external">多说官网</a> “我要安装”</p>
+</li>
+<li><p>在 next 主题设置shortName</p>
+<pre><code># Duoshuo ShortName #不能去掉注释 
+duoshuo_shortname: your_short_name
+</code></pre></li>
+</ul>
+</li>
+<li><p>文章添加多个标签</p>
+<pre><code>tags: [tag1,tag2,tag3] #冒号后面添加空格
+</code></pre></li>
 </ol>
 ]]></content>
     
@@ -47,15 +69,19 @@ hexo deploy
     
     </summary>
     
+      <category term="博客" scheme="http://lionwy.github.io/categories/%E5%8D%9A%E5%AE%A2/"/>
+    
+    
+      <category term="hexo，" scheme="http://lionwy.github.io/tags/hexo%EF%BC%8C/"/>
     
   </entry>
   
   <entry>
-    <title>记录Effective Objective-C 2.0笔记</title>
-    <link href="http://lionwy.github.io/%E8%AE%B0%E5%BD%95Effective%20Objective-C%202.0%E7%AC%94%E8%AE%B0/"/>
-    <id>http://lionwy.github.io/记录Effective Objective-C 2.0笔记/</id>
+    <title>记录Effective Objective-C 2.0 笔记</title>
+    <link href="http://lionwy.github.io/%E8%AE%B0%E5%BD%95Effective%20Objective-C%202.0%20%E7%AC%94%E8%AE%B0/"/>
+    <id>http://lionwy.github.io/记录Effective Objective-C 2.0 笔记/</id>
     <published>2016-09-12T09:04:50.000Z</published>
-    <updated>2016-09-26T09:37:24.000Z</updated>
+    <updated>2016-09-27T09:33:38.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="第一章-熟悉Objective-C"><a href="#第一章-熟悉Objective-C" class="headerlink" title="第一章 熟悉Objective-C"></a>第一章 熟悉Objective-C</h1><blockquote>
 <p>OC是在C语言的基础上添加了面向对象特性</p>
@@ -88,8 +114,12 @@ hexo deploy
     
     </summary>
     
+      <category term="书架" scheme="http://lionwy.github.io/categories/%E4%B9%A6%E6%9E%B6/"/>
     
-      <category term="读书笔记，" scheme="http://lionwy.github.io/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%EF%BC%8C/"/>
+    
+      <category term="读书学习" scheme="http://lionwy.github.io/tags/%E8%AF%BB%E4%B9%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="OC原理" scheme="http://lionwy.github.io/tags/OC%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
