@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lionwy.github.io/"/>
-  <updated>2016-09-30T07:10:13.000Z</updated>
+  <updated>2016-10-11T09:40:33.000Z</updated>
   <id>http://lionwy.github.io/</id>
   
   <author>
@@ -16,76 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hexo 常用命令</title>
-    <link href="http://lionwy.github.io/Hexo%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
-    <id>http://lionwy.github.io/Hexo常用命令/</id>
-    <published>2016-09-26T09:40:36.000Z</published>
-    <updated>2016-09-30T07:10:13.000Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="Hexo-常用命令"><a href="#Hexo-常用命令" class="headerlink" title="Hexo 常用命令"></a>Hexo 常用命令</h1><blockquote>
-<p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">官方文档</a></p>
-</blockquote>
-<ol>
-<li><p>把本地文件上传blog</p>
-<pre><code>hexo clean
-hexo generate
-hexo deploy
-</code></pre></li>
-<li><p>新建文章</p>
-<pre><code>hexo new “文章题目”
-</code></pre></li>
-<li><p>新建另一页（如关于，标签，分类）</p>
-<pre><code>hexo new page &quot;about&quot;
-</code></pre></li>
-<li><p>分类下显示你所编写的标签</p>
-<pre><code>---
-title: categories
-date: 2016-09-14 11:54:11
-type: &quot;categories&quot; #这句话不能少
-comments: false   #去除多说评论框
-
----
-</code></pre></li>
-<li><p>添加多说评论</p>
-<ul>
-<li><p><a href="http://duoshuo.com/" target="_blank" rel="external">多说官网</a> “我要安装”</p>
-</li>
-<li><p>在 next 主题设置shortName</p>
-<pre><code># Duoshuo ShortName #不能去掉注释 
-duoshuo_shortname: your_short_name
-</code></pre></li>
-</ul>
-</li>
-<li><p>文章添加多个标签</p>
-<pre><code>tags: [tag1,tag2,tag3] #冒号后面添加空格
-</code></pre></li>
-<li><p>关于标题设置</p>
-<pre><code>~/Hexo/themes/next/layout/index.swig 
-</code></pre></li>
-</ol>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="xml"><span class="comment">&lt;!--设置的标题 + 主题的描述--&gt;</span></span></div><div class="line"><span class="template-tag">&#123;% <span class="name"><span class="name">block</span></span> title %&#125;</span><span class="xml"> </span><span class="template-variable">&#123;&#123; config.title &#125;&#125;</span><span class="xml"> - </span><span class="template-variable">&#123;&#123; theme.description &#125;&#125;</span><span class="xml"> </span><span class="template-tag">&#123;% <span class="name"><span class="name">endblock</span></span> %&#125;</span><span class="xml"></span></div><div class="line">		</div><div class="line"><span class="comment">&lt;!--主题关键字 + 标题 + 主题描述--&gt;</span>		</div><div class="line"><span class="template-tag">&#123;% <span class="name"><span class="name">block</span></span> title %&#125;</span><span class="xml"> </span><span class="template-variable">&#123;&#123; theme.keywords &#125;&#125;</span><span class="xml"> - </span><span class="template-variable">&#123;&#123; config.title &#125;&#125;</span><span class="xml"> - </span><span class="template-variable">&#123;&#123; theme.description &#125;&#125;</span><span class="xml"> </span><span class="template-tag">&#123;% <span class="name"><span class="name">endblock</span></span> %&#125;</span><span class="xml"></span></div><div class="line">		</div><div class="line"><span class="template-tag">&#123;% <span class="name"><span class="name">block</span></span> title %&#125;</span><span class="xml"> </span><span class="template-variable">&#123;&#123; config.title &#125;&#125;</span><span class="xml"> </span><span class="template-tag">&#123;% <span class="name"><span class="name">endblock</span></span> %&#125;</span><span class="xml"></span></div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;Hexo-常用命令&quot;&gt;&lt;a href=&quot;#Hexo-常用命令&quot; class=&quot;headerlink&quot; title=&quot;Hexo 常用命令&quot;&gt;&lt;/a&gt;Hexo 常用命令&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://hexo.io/zh-c
-    
-    </summary>
-    
-      <category term="博客" scheme="http://lionwy.github.io/categories/%E5%8D%9A%E5%AE%A2/"/>
-    
-    
-      <category term="hexo，" scheme="http://lionwy.github.io/tags/hexo%EF%BC%8C/"/>
-    
-  </entry>
-  
-  <entry>
     <title>记录Effective Objective-C 2.0 笔记目录</title>
     <link href="http://lionwy.github.io/%E8%AE%B0%E5%BD%95Effective%20Objective-C%202.0%20%E7%AC%94%E8%AE%B0/"/>
     <id>http://lionwy.github.io/记录Effective Objective-C 2.0 笔记/</id>
-    <published>2016-09-12T09:04:50.000Z</published>
-    <updated>2016-10-11T08:28:46.000Z</updated>
+    <published>2016-10-11T09:04:50.000Z</published>
+    <updated>2016-10-11T09:40:33.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>Effective Objective-C 这本书只要认真看了的都会明白里面的东西有多重要</p>
@@ -186,6 +121,71 @@ duoshuo_shortname: your_short_name
       <category term="读书学习" scheme="http://lionwy.github.io/tags/%E8%AF%BB%E4%B9%A6%E5%AD%A6%E4%B9%A0/"/>
     
       <category term="OC原理" scheme="http://lionwy.github.io/tags/OC%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hexo 常用命令</title>
+    <link href="http://lionwy.github.io/Hexo%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>http://lionwy.github.io/Hexo常用命令/</id>
+    <published>2016-09-26T09:40:36.000Z</published>
+    <updated>2016-09-30T07:10:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="Hexo-常用命令"><a href="#Hexo-常用命令" class="headerlink" title="Hexo 常用命令"></a>Hexo 常用命令</h1><blockquote>
+<p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">官方文档</a></p>
+</blockquote>
+<ol>
+<li><p>把本地文件上传blog</p>
+<pre><code>hexo clean
+hexo generate
+hexo deploy
+</code></pre></li>
+<li><p>新建文章</p>
+<pre><code>hexo new “文章题目”
+</code></pre></li>
+<li><p>新建另一页（如关于，标签，分类）</p>
+<pre><code>hexo new page &quot;about&quot;
+</code></pre></li>
+<li><p>分类下显示你所编写的标签</p>
+<pre><code>---
+title: categories
+date: 2016-09-14 11:54:11
+type: &quot;categories&quot; #这句话不能少
+comments: false   #去除多说评论框
+
+---
+</code></pre></li>
+<li><p>添加多说评论</p>
+<ul>
+<li><p><a href="http://duoshuo.com/" target="_blank" rel="external">多说官网</a> “我要安装”</p>
+</li>
+<li><p>在 next 主题设置shortName</p>
+<pre><code># Duoshuo ShortName #不能去掉注释 
+duoshuo_shortname: your_short_name
+</code></pre></li>
+</ul>
+</li>
+<li><p>文章添加多个标签</p>
+<pre><code>tags: [tag1,tag2,tag3] #冒号后面添加空格
+</code></pre></li>
+<li><p>关于标题设置</p>
+<pre><code>~/Hexo/themes/next/layout/index.swig 
+</code></pre></li>
+</ol>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="xml"><span class="comment">&lt;!--设置的标题 + 主题的描述--&gt;</span></span></div><div class="line"><span class="template-tag">&#123;% <span class="name"><span class="name">block</span></span> title %&#125;</span><span class="xml"> </span><span class="template-variable">&#123;&#123; config.title &#125;&#125;</span><span class="xml"> - </span><span class="template-variable">&#123;&#123; theme.description &#125;&#125;</span><span class="xml"> </span><span class="template-tag">&#123;% <span class="name"><span class="name">endblock</span></span> %&#125;</span><span class="xml"></span></div><div class="line">		</div><div class="line"><span class="comment">&lt;!--主题关键字 + 标题 + 主题描述--&gt;</span>		</div><div class="line"><span class="template-tag">&#123;% <span class="name"><span class="name">block</span></span> title %&#125;</span><span class="xml"> </span><span class="template-variable">&#123;&#123; theme.keywords &#125;&#125;</span><span class="xml"> - </span><span class="template-variable">&#123;&#123; config.title &#125;&#125;</span><span class="xml"> - </span><span class="template-variable">&#123;&#123; theme.description &#125;&#125;</span><span class="xml"> </span><span class="template-tag">&#123;% <span class="name"><span class="name">endblock</span></span> %&#125;</span><span class="xml"></span></div><div class="line">		</div><div class="line"><span class="template-tag">&#123;% <span class="name"><span class="name">block</span></span> title %&#125;</span><span class="xml"> </span><span class="template-variable">&#123;&#123; config.title &#125;&#125;</span><span class="xml"> </span><span class="template-tag">&#123;% <span class="name"><span class="name">endblock</span></span> %&#125;</span><span class="xml"></span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;Hexo-常用命令&quot;&gt;&lt;a href=&quot;#Hexo-常用命令&quot; class=&quot;headerlink&quot; title=&quot;Hexo 常用命令&quot;&gt;&lt;/a&gt;Hexo 常用命令&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://hexo.io/zh-c
+    
+    </summary>
+    
+      <category term="博客" scheme="http://lionwy.github.io/categories/%E5%8D%9A%E5%AE%A2/"/>
+    
+    
+      <category term="hexo，" scheme="http://lionwy.github.io/tags/hexo%EF%BC%8C/"/>
     
   </entry>
   
