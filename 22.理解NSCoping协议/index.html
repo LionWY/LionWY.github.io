@@ -102,15 +102,37 @@
 
 
 
-<meta name="description" content="学而时习之，温故而知新。">
-<meta property="og:type" content="website">
+<meta name="description" content="理解NSCoping协议
+使用对象时经常需要拷贝它，而类只有实现NSCoping协议，才能支持拷贝操作。
+
+123//NSCopying协议方法，//参数zone，为默认区，- (id)copyWithZone:(nullable NSZone *)zone;
+
+若想某个类支持拷贝功能（不可变immutableCopy的拷贝），只需声明该类遵从NSCoping协议，并实现上述方法即可。
+
+//NS">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Lion_Liu">
-<meta property="og:url" content="http://lionwy.github.io/archives/index.html">
+<meta property="og:url" content="http://lionwy.github.io/22.理解NSCoping协议/index.html">
 <meta property="og:site_name" content="Lion_Liu">
-<meta property="og:description" content="学而时习之，温故而知新。">
+<meta property="og:description" content="理解NSCoping协议
+使用对象时经常需要拷贝它，而类只有实现NSCoping协议，才能支持拷贝操作。
+
+123//NSCopying协议方法，//参数zone，为默认区，- (id)copyWithZone:(nullable NSZone *)zone;
+
+若想某个类支持拷贝功能（不可变immutableCopy的拷贝），只需声明该类遵从NSCoping协议，并实现上述方法即可。
+
+//NS">
+<meta property="og:updated_time" content="2016-10-13T03:02:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Lion_Liu">
-<meta name="twitter:description" content="学而时习之，温故而知新。">
+<meta name="twitter:description" content="理解NSCoping协议
+使用对象时经常需要拷贝它，而类只有实现NSCoping协议，才能支持拷贝操作。
+
+123//NSCopying协议方法，//参数zone，为默认区，- (id)copyWithZone:(nullable NSZone *)zone;
+
+若想某个类支持拷贝功能（不可变immutableCopy的拷贝），只需声明该类遵从NSCoping协议，并实现上述方法即可。
+
+//NS">
 
 
 
@@ -131,9 +153,9 @@
 
 
 
-  <link rel="canonical" href="http://lionwy.github.io/archives/"/>
+  <link rel="canonical" href="http://lionwy.github.io/22.理解NSCoping协议/"/>
 
-  <title> 归档 | Lion_Liu </title>
+  <title>  | Lion_Liu </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,7 +176,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  page-archive  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -275,140 +297,183 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
-
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 3 篇日志。 继续努力。
-    </span>
-
+  <div id="posts" class="posts-expand">
     
-
-      
-      
-      
-
-      
-        
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
-        </div>
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/记录Effective Objective-C 2.0 笔记/" itemprop="url">
-              
-                <span itemprop="name">记录Effective Objective-C 2.0 笔记目录</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-10-11T17:04:50+08:00"
-              content="2016-10-11" >
-          10-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/Hexo常用命令/" itemprop="url">
-              
-                <span itemprop="name">Hexo 常用命令</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-09-26T17:40:36+08:00"
-              content="2016-09-26" >
-          09-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/22.理解NSCoping协议/" itemprop="url">
-              
-                <span itemprop="name">未命名</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-09-14T16:40:50+08:00"
-              content="2016-09-14" >
-          09-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
 
   
+  
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-14T16:40:50+08:00" content="2016-09-14">
+              2016-09-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/22.理解NSCoping协议/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="22.理解NSCoping协议/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/22.理解NSCoping协议/" class="leancloud_visitors" data-flag-title="">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="理解NSCoping协议"><a href="#理解NSCoping协议" class="headerlink" title="理解NSCoping协议"></a>理解NSCoping协议</h1><blockquote>
+<p>使用对象时经常需要拷贝它，而类只有实现NSCoping协议，才能支持拷贝操作。</p>
+</blockquote>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//NSCopying协议方法，</span></div><div class="line"><span class="comment">//参数zone，为默认区，</span></div><div class="line">- (<span class="keyword">id</span>)copyWithZone:(<span class="keyword">nullable</span> <span class="built_in">NSZone</span> *)zone;</div></pre></td></tr></table></figure>
+<ul>
+<li>若想某个类支持拷贝功能（不可变immutableCopy的拷贝），只需声明该类遵从<code>NSCoping</code>协议，并实现上述方法即可。</li>
+</ul>
+<pre><code>//NSMutableCopying 协议方法
+- (id)mutableCopyWithZone:(nullable NSZone *)zone;
+</code></pre><ul>
+<li>实现上述方法，可以让对象进行一份可变版本的拷贝，即NSString -&gt; NSMutableString, NSArray -&gt; NSMutableArray </li>
+</ul>
+<h2 id="copy-or-mutableCopy"><a href="#copy-or-mutableCopy" class="headerlink" title="copy or mutableCopy"></a>copy or mutableCopy</h2><ol>
+<li><p>copy 执行的一定是不可变版本的拷贝，哪怕NSMutableArray, NSMutableString 这类可变对象，进行<code>copy</code>操作，返回对象的也是不可变的，返回对象类型本质为 NSArray， NSString 类型</p>
+</li>
+<li><p>mutableCopy 执行的是可变版本的拷贝，不论对象是可变的对象（NSMutableString， NSMutableArray），还是不可变对象（NSArray， NSString），执行<code>mutableCopy</code>方法后返回对象都是可变的。 </p>
+</li>
+<li>Foundation 框架中的所有collection类在默认情况下都执行浅拷贝，即，只拷贝容器对象本身，而不复制其中数据。</li>
+<li>没有专门定义深拷贝的协议，绝大多数遵从<code>NSCoping</code>协议的对象执行的都是浅拷贝。除非文档说明是深拷贝，或者自定义方法来实现。</li>
+<li><p>针对<code>NSString</code>的<a href="https://searchcode.com/file/12532490/libFoundation/Foundation/NSString.m" target="_blank" rel="external">源码</a> 可以确定，<code>copy</code>操作是浅拷贝，跟<code>retain</code>一样，<code>mutableCopy</code>是深拷贝，重新生成了一个新对象，是<code>NSMutableString</code>类型</p>
+<pre><code>/* NSCopying methods */
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    if (NSStringClass == Nil)
+        NSStringClass = [NSString class];
+
+    return RETAIN(self);
+    // return [[NSStringClass allocWithZone:zone] initWithString:self];
+}
+
+/* NSMutableCopying methods */
+
+- (id)mutableCopyWithZone:(NSZone*)zone
+{
+    return [[NSMutableString allocWithZone:zone] initWithString:self];
+}
+</code></pre></li>
+<li><p>而<code>NSMutableString</code><a href="https://searchcode.com/file/68838008/jni%20w:%20itoa%20runtime%20and%20allocator/Foundation/NSMutableString.m" target="_blank" rel="external">源码</a>只有<code>copy</code>方法，返回的是<code>NSString</code>类型，重新生成了一个新的对象，是深拷贝，执行<code>mutableCopy</code>，实际是调用父类<code>NSString</code>的<code>mutableCopy</code>方法。</p>
+<pre><code>-(id)copy {
+       return [[NSString alloc] initWithString:self];
+}
+
+-(id)copyWithZone:(NSZone*)zone {
+    return [[NSString allocWithZone:zone] initWithString:self];
+}
+</code></pre></li>
+</ol>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><p><strong><em>1. 只有实现<code>NSCoping</code>协议，才能执行<code>copy</code>操作</em></strong></p>
+<p><strong><em>2. 如果自定义的对象分为可变与不可变版本，需要同时实现<code>NSCoping</code>与<code>NSMutableCoping</code>协议</em></strong></p>
+<p><strong><em>3. 复制对象一般尽量执行浅拷贝</em></strong></p>
+<p><strong><em>4. 如果对象需要深拷贝，可考虑新增一个专门执行深拷贝的方法</em></strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Hexo常用命令/" rel="prev" title="Hexo 常用命令">
+                Hexo 常用命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -416,6 +481,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="22.理解NSCoping协议/"
+           data-title="" data-url="http://lionwy.github.io/22.理解NSCoping协议/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -435,8 +508,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://oc164vmyr.bkt.clouddn.com/16-8-17/94370674.jpg"
@@ -522,6 +604,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#理解NSCoping协议"><span class="nav-text">理解NSCoping协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#copy-or-mutableCopy"><span class="nav-text">copy or mutableCopy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结："><span class="nav-text">总结：</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -618,11 +711,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
 
 
   

@@ -186,7 +186,7 @@ th {
 body {
   position: relative;
   font-family: 'Monda', "PingFang SC", "Microsoft YaHei", sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 2;
   color: #555;
   background: #fff;
@@ -203,7 +203,7 @@ body {
 }
 @media (min-width: 1600px) {
   body {
-    font-size: 16px;
+    font-size: 17px;
   }
 }
 h1,
@@ -496,14 +496,14 @@ pre,
   overflow: auto;
   margin: 20px 0;
   padding: 15px;
-  font-size: 13px;
+  font-size: 16px;
   color: #ccc;
   background: #2d2d2d;
   line-height: 1.6;
 }
 pre,
 code {
-  font-family: 'PT Mono', consolas, Menlo, "PingFang SC", "Microsoft YaHei", monospace;
+  font-family: 'Source Code Pro', consolas, Menlo, "PingFang SC", "Microsoft YaHei", monospace;
 }
 code {
   padding: 2px 4px;
@@ -511,7 +511,7 @@ code {
   color: #555;
   background: #eee;
   border-radius: 4px;
-  font-size: 13px;
+  font-size: 16px;
 }
 pre code {
   padding: 0;
@@ -838,7 +838,7 @@ pre .javascript .function {
 .back-to-top {
   box-sizing: border-box;
   position: fixed;
-  bottom: -100px;
+  bottom: -110px;
   right: 50px;
   z-index: 1050;
   padding: 0 6px;
@@ -1016,7 +1016,7 @@ pre .javascript .function {
 .post-body .figure .caption {
   margin: 10px auto 15px;
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   color: #999;
   font-weight: bold;
   line-height: 1;
@@ -1548,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ffe539;
+  background: #fc6b40;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2341,7 +2341,7 @@ hr {
 }
 .post-more-link a {
   padding: 0;
-  font-size: 14px;
+  font-size: 15px;
   color: #666;
   background: none;
   border: none;
@@ -2350,12 +2350,12 @@ hr {
 }
 @media (max-width: 767px) {
   .post-more-link a {
-    font-size: 12px;
+    font-size: 13px;
   }
 }
 @media (min-width: 1600px) {
   .post-more-link a {
-    font-size: 16px;
+    font-size: 17px;
   }
 }
 .post-more-link a:hover {
