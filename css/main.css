@@ -186,7 +186,7 @@ th {
 body {
   position: relative;
   font-family: 'Monda', "PingFang SC", "Microsoft YaHei", sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 2;
   color: #555;
   background: #fff;
@@ -203,7 +203,7 @@ body {
 }
 @media (min-width: 1600px) {
   body {
-    font-size: 17px;
+    font-size: 18px;
   }
 }
 h1,
@@ -496,10 +496,10 @@ pre,
   overflow: auto;
   margin: 20px 0;
   padding: 15px;
-  font-size: 16px;
+  font-size: 15px;
   color: #ccc;
   background: #2d2d2d;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 pre,
 code {
@@ -511,7 +511,7 @@ code {
   color: #555;
   background: #eee;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 15px;
 }
 pre code {
   padding: 0;
@@ -725,7 +725,7 @@ pre .javascript .function {
 .btn {
   display: inline-block;
   padding: 0 20px;
-  font-size: 14px;
+  font-size: 15px;
   color: #fff;
   background: #222;
   border: 2px solid #222;
@@ -1016,7 +1016,7 @@ pre .javascript .function {
 .post-body .figure .caption {
   margin: 10px auto 15px;
   text-align: center;
-  font-size: 15px;
+  font-size: 16px;
   color: #999;
   font-weight: bold;
   line-height: 1;
@@ -1548,7 +1548,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #fc6b40;
+  background: #dad4ff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2341,7 +2341,7 @@ hr {
 }
 .post-more-link a {
   padding: 0;
-  font-size: 15px;
+  font-size: 16px;
   color: #666;
   background: none;
   border: none;
@@ -2350,12 +2350,12 @@ hr {
 }
 @media (max-width: 767px) {
   .post-more-link a {
-    font-size: 13px;
+    font-size: 14px;
   }
 }
 @media (min-width: 1600px) {
   .post-more-link a {
-    font-size: 17px;
+    font-size: 18px;
   }
 }
 .post-more-link a:hover {
