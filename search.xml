@@ -80,8 +80,8 @@
     </entry>
     
     <entry>
-      <title><![CDATA[图片异步加载之AFNetwork（上）]]></title>
-      <url>http://lionwy.github.io/%E5%9B%BE%E7%89%87%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD%E4%B9%8BAFNetwork%EF%BC%88%E4%B8%8A%EF%BC%89/</url>
+      <title><![CDATA[图片加载之AFNetwork（上）]]></title>
+      <url>http://lionwy.github.io/%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B9%8BAFNetwork%EF%BC%88%E4%B8%8A%EF%BC%89/</url>
       <content type="html"><![CDATA[<h2 id="UIImageView-AFNetworking"><a href="#UIImageView-AFNetworking" class="headerlink" title="UIImageView+AFNetworking"></a>UIImageView+AFNetworking</h2><blockquote>
 <p>This category adds methods to the UIKit framework’s UIImageView class. The methods in this category provide support for loading remote images asynchronously from a URL.</p>
 </blockquote>
