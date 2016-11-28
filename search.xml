@@ -6,7 +6,8 @@
     <entry>
       <title><![CDATA[记React Native 组件]]></title>
       <url>http://lionwy.github.io/%E8%AE%B0React-Native-%E7%BB%84%E4%BB%B6/</url>
-      <content type="html"><![CDATA[<h2 id="Flex-布局"><a href="#Flex-布局" class="headerlink" title="Flex 布局:"></a>Flex 布局:</h2><ol>
+      <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/1929911-4155623a1eb9a829.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="茫茫多"></p>
+<h2 id="Flex-布局"><a href="#Flex-布局" class="headerlink" title="Flex 布局:"></a>Flex 布局:</h2><ol>
 <li><p><code>flexDirection</code></p>
 </li>
 <li><p><code>alignItems</code></p>

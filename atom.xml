@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lionwy.github.io/"/>
-  <updated>2016-11-28T03:03:00.000Z</updated>
+  <updated>2016-11-28T03:08:23.000Z</updated>
   <id>http://lionwy.github.io/</id>
   
   <author>
@@ -20,9 +20,10 @@
     <link href="http://lionwy.github.io/%E8%AE%B0React-Native-%E7%BB%84%E4%BB%B6/"/>
     <id>http://lionwy.github.io/记React-Native-组件/</id>
     <published>2016-11-28T02:48:49.000Z</published>
-    <updated>2016-11-28T03:03:00.000Z</updated>
+    <updated>2016-11-28T03:08:23.000Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="Flex-布局"><a href="#Flex-布局" class="headerlink" title="Flex 布局:"></a>Flex 布局:</h2><ol>
+    <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/1929911-4155623a1eb9a829.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="茫茫多"></p>
+<h2 id="Flex-布局"><a href="#Flex-布局" class="headerlink" title="Flex 布局:"></a>Flex 布局:</h2><ol>
 <li><p><code>flexDirection</code></p>
 </li>
 <li><p><code>alignItems</code></p>
@@ -206,10 +207,7 @@
     
     <summary type="html">
     
-      &lt;h2 id=&quot;Flex-布局&quot;&gt;&lt;a href=&quot;#Flex-布局&quot; class=&quot;headerlink&quot; title=&quot;Flex 布局:&quot;&gt;&lt;/a&gt;Flex 布局:&lt;/h2&gt;&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;flexDirection&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;l
+      &lt;p&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1929911-4155623a1eb9a829.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; 
     
     </summary>
     
