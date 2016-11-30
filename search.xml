@@ -4,6 +4,188 @@
   
     
     <entry>
+      <title><![CDATA[React Native API]]></title>
+      <url>http://lionwy.github.io/React-Native-API/</url>
+      <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/1929911-434f614e7eba73a9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h2 id="AppRegistry"><a href="#AppRegistry" class="headerlink" title="AppRegistry"></a>AppRegistry</h2><blockquote>
+<p>AppRegistry是JS运行所有React Native应用的入口。</p>
+</blockquote>
+<p>最常用的是：注册根组件<br><code>registerComponent(appKey, getComponentFunc)</code><br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AppRegistry.registerComponent(<span class="string">'Test'</span>, <span class="function"><span class="params">()</span> =&gt;</span> SampleComponent);</div></pre></td></tr></table></figure></p>
+<h2 id="AsyncStorage"><a href="#AsyncStorage" class="headerlink" title="AsyncStorage"></a>AsyncStorage</h2><blockquote>
+<p>异步存储读取</p>
+</blockquote>
+<p>(第三方的)<a href="https://github.com/sunnylqm/react-native-storage/blob/master/README-CHN.md" target="_blank" rel="external">react-native-storage
+</a></p>
+<h2 id="AlertIOS"><a href="#AlertIOS" class="headerlink" title="AlertIOS"></a>AlertIOS</h2><ol>
+<li><p><code>static alert(title, message?, callbackOrButtons?)</code> </p>
+<ul>
+<li>callbackOrButtons:一个函数func<code>（（）=&gt; void）</code>或者button数组 <code>ButtonsArray</code><ul>
+<li>默认情况下，<code>Cancel</code>和<code>OK</code>, func是点OK的方法</li>
+</ul>
+</li>
+<li><p>ButtonsArray: 对象数组，有以下几个参数</p>
+<ul>
+<li>text:</li>
+<li>onPress:</li>
+<li>style: AlertButtonStyle<ul>
+<li>default</li>
+<li>cancel</li>
+<li>destructive</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.customButtons = [&#123;</div><div class="line">      <span class="built_in">text</span>: <span class="string">'Custom OK'</span>,</div><div class="line">      onPress: <span class="keyword">this</span>.saveResponse(按钮方法)</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">      <span class="built_in">text</span>: <span class="string">'Custom cancel'</span>,</div><div class="line">      style: <span class="string">'cancel'</span>,（<span class="built_in">default</span>/cancel/destructive）</div><div class="line">  &#125;</div><div class="line">];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><code>static prompt(title, message?, callbackOrButtons?, type?, defaultValue?)</code> 有输入框的提示，可以用于提示用户名/密码输入</p>
+<ul>
+<li><p>type: AlertType</p>
+<ul>
+<li>default</li>
+<li>plain-text</li>
+<li>secure-text</li>
+<li>login-password</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">AlertIOS.prompt(</div><div class="line">        <span class="string">'input your password'</span>, </div><div class="line">        <span class="literal">null</span>, </div><div class="line">        <span class="keyword">this</span>.customButtons, </div><div class="line">        <span class="string">'login-password'</span>, </div><div class="line">        <span class="string">'userName'</span>)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="ActionSheetIOS"><a href="#ActionSheetIOS" class="headerlink" title="ActionSheetIOS"></a>ActionSheetIOS</h2><ol>
+<li><p><code>static showActionSheetWithOptions(options, callback)</code></p>
+<ul>
+<li><code>options</code> 字符串数组,button title</li>
+<li><code>cancelButtonIndex</code></li>
+<li><code>destructiveButtonIndex</code></li>
+<li><code>title</code></li>
+<li><code>message</code></li>
+<li><code>tintColor</code></li>
+<li><p><code>callBack</code> 回调func，</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">showActionSheet</span> = <span class="params">()</span>=&gt;</span> &#123;</div><div class="line">   ActionSheetIOS.showActionSheetWithOptions(&#123;</div><div class="line">       options: BUTTONS,</div><div class="line">       cancelButtonIndex: CANCEL_INDEX,</div><div class="line">       destructiveButtonIndex: DESTRUCTIVE_INDEX,</div><div class="line">       tintColor: <span class="string">'green'</span>,</div><div class="line">       title: <span class="string">'action sheet title'</span>,</div><div class="line">       message: <span class="string">'message'</span></div><div class="line">   &#125;,</div><div class="line"></div><div class="line">   <span class="function"><span class="params">(buttonIndex)</span> =&gt;</span> &#123;</div><div class="line">       <span class="keyword">this</span>.setState(&#123;clicked: BUTTONS[buttonIndex]&#125;);</div><div class="line">   &#125;);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><code>static showShareActionSheetWithOptions(options, failureCallback, successCallback)</code> 分享弹出框</p>
+<ul>
+<li><code>url</code></li>
+<li><code>message</code></li>
+<li><code>subject</code> 主题</li>
+<li><p><code>excludedActivityTypes</code> 弹出框中不显示的活动</p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">showShareActionSheet</span> = <span class="params">()</span>=&gt;</span> &#123;</div><div class="line">       UIManager.takeSnapshot(<span class="string">'window'</span>).<span class="keyword">then</span>(<span class="function"><span class="params">(uri)</span>=&gt;</span> &#123;</div><div class="line">           ActionSheetIOS.showShareActionSheetWithOptions(&#123;</div><div class="line">               <span class="name">url</span>: uri,</div><div class="line">               <span class="name">message</span>: <span class="string">'message to go with shared url'</span>,</div><div class="line">   	        <span class="name">subject</span>: <span class="string">'a subject to go in the email heading'</span>,</div><div class="line">               <span class="name">excludedActivityTypes</span>: [</div><div class="line">                   <span class="string">'com.baidu.www'</span></div><div class="line">               ]</div><div class="line">           &#125;,</div><div class="line">           <span class="function"><span class="params">(<span class="built_in">error</span>)</span> =&gt;</span> alert(<span class="built_in">error</span>),</div><div class="line">           <span class="function"><span class="params">(success, method)</span> =&gt;</span> &#123;</div><div class="line">               var text;</div><div class="line">               <span class="keyword">if</span> (success) &#123;</div><div class="line">                   text = <span class="string">'Shared via $&#123;method&#125;'</span>;</div><div class="line">               &#125; <span class="keyword">else</span> &#123;</div><div class="line">                   text = <span class="string">'You didn\'t share'</span>;</div><div class="line">               &#125;</div><div class="line">               this.setState(&#123;text&#125;);</div><div class="line">           &#125;);</div><div class="line">       &#125;).catch(<span class="function"><span class="params">(<span class="built_in">error</span>)</span> =&gt;</span> alert(<span class="built_in">error</span>));</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="PixelRatio"><a href="#PixelRatio" class="headerlink" title="PixelRatio"></a>PixelRatio</h2><blockquote>
+<p>相当于iOS中的<code>[UIScreen mainScreen].scale</code></p>
+</blockquote>
+<ol>
+<li><p><code>static get()</code> </p>
+<ul>
+<li>PixelRatio.get() === 1<ul>
+<li>mdpi Android devices (160 dpi)</li>
+</ul>
+</li>
+<li>PixelRatio.get() === 1.5<ul>
+<li>hdpi Android devices (240 dpi)</li>
+</ul>
+</li>
+<li>PixelRatio.get() === 2<ul>
+<li>iPhone 4, 4S</li>
+<li>iPhone 5, 5c, 5s</li>
+<li>iPhone 6</li>
+<li>xhdpi Android devices (320 dpi)</li>
+</ul>
+</li>
+<li>PixelRatio.get() === 3<ul>
+<li>iPhone 6 plus</li>
+<li>xxhdpi Android devices (480 dpi)</li>
+</ul>
+</li>
+<li>PixelRatio.get() === 3.5<ul>
+<li>Nexus 6</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code>static getPixelSizeForLayoutSize(layoutSize)</code><br>将布局尺寸，转化为像素尺寸。返回的是整数数值</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">var</span> <span class="built_in">image</span> = getImage(&#123;</div><div class="line">	  <span class="built_in">width</span>: PixelRatio.getPixelSizeForLayoutSize(<span class="number">200</span>),</div><div class="line">	  <span class="built_in">height</span>: PixelRatio.getPixelSizeForLayoutSize(<span class="number">100</span>),</div><div class="line">&#125;);</div><div class="line">&lt;Image source=&#123;<span class="built_in">image</span>&#125; <span class="built_in">style</span>=&#123;&#123;<span class="built_in">width</span>: <span class="number">200</span>, <span class="built_in">height</span>: <span class="number">100</span>&#125;&#125; /&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="AppState"><a href="#AppState" class="headerlink" title="AppState"></a>AppState</h2><blockquote>
+<p>常用于推送通知</p>
+</blockquote>
+<ol>
+<li><code>currentState</code> 当前状态</li>
+<li><code>addEventListener(type, handler)</code>  添加事件监听</li>
+<li><code>removeEventListener(type, handler)</code>移除事件监听</li>
+</ol>
+<h2 id="NetInfo"><a href="#NetInfo" class="headerlink" title="NetInfo"></a>NetInfo</h2><blockquote>
+<p>获取网络状态和类型，用时再<a href="http://facebook.github.io/react-native/docs/netinfo.html" target="_blank" rel="external">查找</a></p>
+</blockquote>
+<h2 id="CameralRoll"><a href="#CameralRoll" class="headerlink" title="CameralRoll"></a>CameralRoll</h2><blockquote>
+<p>提供相册相关的功能</p>
+</blockquote>
+<ul>
+<li><p><code>static saveToCameraRoll(tag, type?)</code> 存储</p>
+<ul>
+<li>type: 只能是<code>photo</code> 或者<code>video</code></li>
+<li><p>? 图片保存成功之后的回调</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">CameraRoll</span><span class="selector-class">.saveToCameraRoll</span>(imgURL + img2, <span class="string">'photo'</span>, (url)=&gt;&#123;</div><div class="line">  photos<span class="selector-class">.unshift</span>(url);</div><div class="line">  <span class="selector-tag">_that</span><span class="selector-class">.setState</span>(&#123;</div><div class="line">      <span class="attribute">photos</span>: photos</div><div class="line">  &#125;);</div><div class="line">  AlertIOS<span class="selector-class">.alert</span>(<span class="string">'图片保存成功'</span>);</div><div class="line">&#125;, ()=&gt; &#123;</div><div class="line">  AlertIOS<span class="selector-class">.alert</span>(<span class="string">'图片保存失败'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><code>static getPhotos(params)</code> 获取图片</p>
+<ul>
+<li>params 具体<a href="https://github.com/facebook/react-native/blob/master/Libraries/CameraRoll/CameraRoll.js#L46" target="_blank" rel="external">这里</a></li>
+</ul>
+</li>
+<li><p><a href="https://github.com/lwansbrough/react-native-camera" target="_blank" rel="external">react-native-camera
+</a></p>
+  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fetchParams =&#123;</div><div class="line">    first: <span class="number">4</span>,</div><div class="line">    groupTypes: <span class="string">'All'</span>,</div><div class="line">    assetType: <span class="string">'Photos'</span>,</div><div class="line">&#125;;</div><div class="line"><span class="keyword">var</span> imgURL = <span class="string">'http://vczero.github.io/lvtu/img/'</span>;</div><div class="line"></div><div class="line">componentDidMount() &#123;</div><div class="line">   <span class="keyword">var</span> _that = <span class="keyword">this</span>;</div><div class="line"></div><div class="line">   CameraRoll.getPhotos(fetchParams)</div><div class="line">   .then((<span class="keyword">data</span>)=&gt; &#123;</div><div class="line">       console.log(<span class="string">'===='</span> + <span class="keyword">data</span>.edges);</div><div class="line">       <span class="keyword">var</span> edges = <span class="keyword">data</span>.edges;</div><div class="line">       <span class="keyword">var</span> photos = [];</div><div class="line">       <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> edges)&#123;</div><div class="line">           photos.push(edges[i].node.image.uri);</div><div class="line">       &#125;</div><div class="line">       _that.setState(&#123;</div><div class="line">           photos: photos</div><div class="line">       &#125;);</div><div class="line">   &#125;, ()=&gt; &#123;</div><div class="line">       alert(<span class="string">'图片获取失败'</span>);</div><div class="line">   &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Vibration"><a href="#Vibration" class="headerlink" title="Vibration"></a>Vibration</h2><blockquote>
+<p>控制设备震动</p>
+</blockquote>
+<h2 id="Geolocation"><a href="#Geolocation" class="headerlink" title="Geolocation"></a>Geolocation</h2><blockquote>
+<p>处理位置信息</p>
+</blockquote>
+<ol>
+<li>iOS<ul>
+<li>plist 添加<code>NSLocationWhenInUseUsageDescription</code>字段</li>
+<li>使用<code>react-native init</code>创建的项目，默认开启定位功能</li>
+</ul>
+</li>
+<li><p>Android</p>
+<ul>
+<li>AndroidManifest.xml 添加<code>&lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot; /&gt;</code></li>
+</ul>
+</li>
+<li><p><code>static getCurrentPosition(geo_success, geo_error?, geo_options?)</code> 获取当前位置信息</p>
+<ul>
+<li>geo_options<ul>
+<li><code>enableHighAccuracy</code> ： bool， 是否高精度</li>
+<li><code>timeout</code> 超时时间</li>
+<li><code>maximumAge</code> 多久之后再次获取，即重复获取时间间隔</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>static watchPosition(success, error?, options?)</code> 监听位置变换信息</li>
+<li><code>static clearWatch(watchID)</code></li>
+<li><code>static stopObserving()</code></li>
+</ol>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">componentDidMount() &#123;</div><div class="line">   navigator.geolocation.getCurrentPosition(</div><div class="line">       <span class="function"><span class="params">(position)</span> =&gt;</span> &#123;</div><div class="line">           var initialPosition = JSON.stringify(position);</div><div class="line">           <span class="keyword">this</span>.setState(&#123;initialPosition&#125;);</div><div class="line">       &#125;,</div><div class="line">       <span class="function"><span class="params">(error)</span> =&gt;</span> alert(JSON.stringify(error)),</div><div class="line">       &#123;enableHighAccuracy: <span class="literal">true</span>, timeout: <span class="number">20000</span>, maximumAge: <span class="number">1000</span>&#125;</div><div class="line">   );</div><div class="line">   <span class="keyword">this</span>.watchID = navigator.geolocation.watchPosition(<span class="function"><span class="params">(position)</span> =&gt;</span> &#123;</div><div class="line">       var lastPosition = JSON.stringify(position);</div><div class="line">       <span class="keyword">this</span>.setState(&#123;lastPosition&#125;);</div><div class="line">   &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="数据请求"><a href="#数据请求" class="headerlink" title="数据请求"></a>数据请求</h2><blockquote>
+<p><code>fetch</code>封装程度更好</p>
+</blockquote>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">_postRequest(url, data, callback) &#123;</div><div class="line">   var opt = &#123;</div><div class="line">       method: <span class="string">'POST'</span>,</div><div class="line">       headers: &#123;</div><div class="line">           <span class="string">'Accept'</span>: <span class="string">'application/json'</span>,</div><div class="line">           <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>,</div><div class="line">       &#125;,</div><div class="line">       body: JSON.stringify(data)</div><div class="line">   &#125;;</div><div class="line"></div><div class="line">   fetch(url, opt)</div><div class="line">   .<span class="keyword">then</span>(<span class="function"><span class="params">(response)</span> =&gt;</span> response.json())</div><div class="line">   .<span class="keyword">then</span>(<span class="function"><span class="params">(responseJson)</span>=&gt;</span>&#123;</div><div class="line">       <span class="built_in">console</span>.log(responseJson);</div><div class="line">       callback(responseJson);</div><div class="line"></div><div class="line">   &#125;)</div><div class="line">   .<span class="keyword">catch</span>(<span class="function"><span class="params">(error)</span>=&gt;</span>&#123;</div><div class="line">       <span class="built_in">console</span>.warn(error);</div><div class="line">   &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[记React Native 组件]]></title>
       <url>http://lionwy.github.io/%E8%AE%B0React-Native-%E7%BB%84%E4%BB%B6/</url>
       <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/1929911-4155623a1eb9a829.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="茫茫多"></p>
