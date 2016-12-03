@@ -4,6 +4,75 @@
   
     
     <entry>
+      <title><![CDATA[React Native 调用 Native 模块]]></title>
+      <url>http://lionwy.github.io/React-Native-%E8%B0%83%E7%94%A8-Native-%E6%A8%A1%E5%9D%97/</url>
+      <content type="html"><![CDATA[<p><img src="http://oeb4c30x3.bkt.clouddn.com/dropg86ms2zsija-dan-carlson.jpg" alt=""></p>
+<ol>
+<li><p>声明一个类，必须实现<code>&lt;RCTBridgeModule&gt;</code> 协议</p>
+</li>
+<li><p>.m文件中实现宏定义<code>RCT_EXPORT_MODULE（）</code>，当它加载的时候，会自动注册</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// js_name 就是react native 获取类时所对应的名称，</span></div><div class="line"><span class="comment">// 即 NativeModules.js_name</span></div><div class="line"><span class="comment">// 传空的话，名称就是类名字</span></div><div class="line"><span class="comment">// #define RCT_EXPORT_MODULE(js_name)</span></div><div class="line"><span class="comment">// .m 文件</span></div><div class="line">RCT_EXPORT_MODULE(Test);</div><div class="line">	</div><div class="line"><span class="comment">// js 文件</span></div><div class="line"><span class="keyword">import</span> &#123;NativeModules&#125; <span class="keyword">from</span> <span class="string">'react-native'</span>;</div><div class="line"><span class="keyword">var</span> Test = NativeModules.Test;</div></pre></td></tr></table></figure>
+</li>
+<li><p>调用方法，js调用OC的方法</p>
+<ul>
+<li>需要另外一个宏<code>RCT_EXPORT_METHOD(method)</code>，js 中 使用<code>.</code>来调用</li>
+<li>方法返回值类型必须为<code>void</code></li>
+<li><p>传参类型</p>
+<ul>
+<li>string: NSString</li>
+<li>number: 基本类型</li>
+<li>boolean</li>
+<li>array</li>
+<li>object: NSDictionary, key为string，value是列表中的类型</li>
+<li>function: RCTResponseSenderBlock</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// .m 文件</span></div><div class="line">RCT_EXPORT_METHOD(<span class="built_in">print</span>:(NSString *)<span class="built_in">text</span>)</div><div class="line">&#123;</div><div class="line">    NSLog(@<span class="string">"---------%@"</span>, <span class="built_in">text</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// js文件</span></div><div class="line">Test.<span class="built_in">print</span>(<span class="string">'Hello World!'</span>);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>回调函数，js中的参数经过OC方法的处理，结果再返回给js</p>
+<ul>
+<li><code>RCTResponseSenderBlock</code> 唯一参数，数组</li>
+<li><p>第一个元素一般为错误对象，第二个元素才是返回结果</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// .m</span></div><div class="line">RCT_EXPORT_METHOD(<span class="string">add:</span>(NSInteger)numA <span class="string">andNumB:</span>(NSInteger)numB <span class="string">result:</span>(RCTResponseSenderBlock)callback) &#123;</div><div class="line">    	callback(@[[NSNull <span class="literal">null</span>], @(numA + numB)]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// js</span></div><div class="line">Test.add(<span class="number">1</span>, <span class="number">2</span>, (error, result)=&gt;&#123;</div><div class="line">   alert(<span class="string">'1 + 2 ='</span> + result);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>设定原生模块所处线程</p>
+<ul>
+<li>实现<code>- (dispatch_queue_t) methodQueue</code>，即原生模块中的所有方法都会在<code>methodQueue</code>中执行</li>
+<li><p>也可以<code>RCT_EXPORT_METHOD()</code>方法内部开辟分线程，让一些费时的操作在分线程中执行</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">RCT_EXPORT_METHOD</span>(<span class="attribute">doSomethingExpensive</span>:(NSString *)parma <span class="attribute">callback</span>:(RCTResponseSenderBlock)callback) &#123;</div><div class="line">	<span class="selector-tag">dispatch_async</span>(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="number">0</span>), ^&#123;</div><div class="line"> </div><div class="line">       		<span class="comment">// 执行长时间的操作</span></div><div class="line">        </div><div class="line">       		<span class="comment">// callback视情况 1， 2 位置都可以</span></div><div class="line">       		<span class="comment">// 1. callback(@[]);</span></div><div class="line">	&#125;);</div><div class="line">   </div><div class="line">		<span class="comment">// 2. callback(@[]);</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>导出常量</p>
+<ul>
+<li>原生模块导出一些常量，让js可以随时访问，并且运行期间不会改变</li>
+<li><p>方法名必须是<code>- (NSDictionary *)constantsToExport</code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// .m</span></div><div class="line">- (NSDictionary *)constantsToExport</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> @&#123;</div><div class="line">             @<span class="string">"firstDayOfWeek"</span>: @<span class="string">"Monday"</span></div><div class="line">             &#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// js</span></div><div class="line">alert(Test.firstDayOfWeek);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>发送事件</p>
+<ol>
+<li><p>类需要继承<code>RCTEventEmitter</code></p>
+ <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#import <span class="meta-string">"RCTEventEmitter.h"</span></span></div><div class="line"><span class="meta">#import <span class="meta-string">"RCTBridgeModule.h"</span></span></div><div class="line">	</div><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MyModule</span> : <span class="title">RCTEventEmitter</span> 	&lt;<span class="title">RCTBridgeModule</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>实现<code>supportedEvents</code>方法，设置发送事件的名称</p>
+ <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 注册该类，对外名称为RN，</span></div><div class="line">RCT_EXPORT_MODULE(RN);</div><div class="line"><span class="comment">// 设置可以发送的事件名称数组</span></div><div class="line">- (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)supportedEvents</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> @[<span class="string">@"textChange"</span>];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="keyword">void</span>)changeText:(<span class="built_in">NSString</span> *)text</div><div class="line">&#123;</div><div class="line"></div><div class="line">    <span class="keyword">self</span>.text = text;</div><div class="line">    <span class="comment">// 发送事件</span></div><div class="line">    [<span class="keyword">self</span> sendEventWithName:<span class="string">@"textChange"</span> body:@&#123;</div><div class="line">                                                 <span class="string">@"text"</span>: <span class="keyword">self</span>.text</div><div class="line">                                                 &#125;];        </div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>js文件中</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; NativeModules, NativeEventEmitter &#125; from <span class="string">'react-native'</span></div><div class="line"><span class="comment">// 获取组件RN</span></div><div class="line"><span class="keyword">var</span> RN = NativeModules.RN;</div><div class="line"></div><div class="line"><span class="keyword">const</span> RNEvent = <span class="keyword">new</span> NativeEventEmitter(RN);</div><div class="line"></div><div class="line"><span class="keyword">var</span> subscription = RNEvent.addListener(</div><div class="line">    <span class="string">'textChange'</span>,</div><div class="line">    (result) =&gt; alert(result.text)</div><div class="line">);</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<p>参考链接:<br><a href="http://facebook.github.io/react-native/releases/next/docs/native-modules-ios.html" target="_blank" rel="external">官网</a><br><a href="http://reactnative.cn/docs/next/native-modules-ios.html#content" target="_blank" rel="external">中文官网</a><br><a href="https://github.com/facebook/react-native/issues/8714" target="_blank" rel="external">发送事件</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[React Native API]]></title>
       <url>http://lionwy.github.io/React-Native-API/</url>
       <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/1929911-434f614e7eba73a9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
