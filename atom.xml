@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lionwy.github.io/"/>
-  <updated>2016-12-03T15:36:25.000Z</updated>
+  <updated>2016-12-18T13:29:31.000Z</updated>
   <id>http://lionwy.github.io/</id>
   
   <author>
@@ -14,6 +14,81 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>React Native 和 Native 之间自由切换</title>
+    <link href="http://lionwy.github.io/React%20Native%20%E5%92%8C%20Native%20%E4%B9%8B%E9%97%B4%E8%87%AA%E7%94%B1%E5%88%87%E6%8D%A2/"/>
+    <id>http://lionwy.github.io/React Native 和 Native 之间自由切换/</id>
+    <published>2016-12-18T13:20:18.000Z</published>
+    <updated>2016-12-18T13:29:31.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>其实在学习 RN 的时候，一直都有种想法，RN 在界面布局上确有其独到之处，但有时候并不如 <code>Native</code> 来的舒服，而且第三方的控件/组件也没有 <code>Native</code> 的丰富，因此就想有些界面能不能 <code>Native</code> 来写，然后再跳回 <code>React Native</code>，并且可以相互传参，应该是种很爽的体验。</p>
+<ol>
+<li><p>首先创建RN项目，定下基调，整个 APP 大部分都是通过 <code>RN</code> 实现的，因莫名的原因，个别页面要使用 <code>iOS</code> 实现。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// RN 命令行创建项目</span></div><div class="line">react-<span class="keyword">native</span> init RNJump</div></pre></td></tr></table></figure>
+</li>
+<li><p>几乎所有的 App 都有 <code>Navigator</code>，为了方便（懒），就直接使用 <code>NavigatorIOS</code>，并设置了根视图 <code>Root</code></p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;NavigatorIOS</div><div class="line"></div><div class="line">	 initialRoute=&#123;&#123;</div><div class="line">	     component: Root,</div><div class="line">	     title: <span class="string">'RN 首页'</span>,</div><div class="line">	</div><div class="line">	 &#125;&#125;</div><div class="line">	 barTintColor= <span class="string">'cyan'</span></div><div class="line">	 style=&#123;&#123;flex: <span class="number">1</span>&#125;&#125;</div><div class="line">	</div><div class="line"> /&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>RN传参：<code>root</code> 页面 <code>push</code> 下一个页面，并传递一个简单的参数 <code>text: &#39;root&#39;</code></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> &lt;Text onPress=&#123;()=&gt;&#123;</div><div class="line">    this<span class="selector-class">.props</span><span class="selector-class">.navigator</span><span class="selector-class">.push</span>(&#123;</div><div class="line">        component: Second,</div><div class="line">        title: <span class="string">'RN第二页'</span>,</div><div class="line">        passProps: &#123;</div><div class="line">            text: <span class="string">'root'</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;)</div><div class="line">&#125;&#125;&gt;</div><div class="line">   跳到第二页</div><div class="line">&lt;/Text&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>iOS</code> 准备工作：因为 <code>RN</code> 中实现了<code>Navigator</code>, 所以在 <code>iOS</code> 中也要有对应的 <code>NavigationController</code>，最主要的也是要实现 push 动画，当然自定义也是可以的。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// AppDelegate.m</span></div><div class="line">  <span class="built_in">UIViewController</span> *rootViewController = [<span class="built_in">UIViewController</span> new];</div><div class="line">  rootViewController.view = rootView;</div><div class="line">  </div><div class="line">  <span class="keyword">self</span>.navi = [[<span class="built_in">UINavigationController</span> alloc] initWithRootViewController:rootViewController];</div><div class="line">  <span class="keyword">self</span>.window.rootViewController = <span class="keyword">self</span>.navi;</div><div class="line">  <span class="comment">// 这里设置hidden，是为了不覆盖 RN 中的 navigator</span></div><div class="line">  <span class="keyword">self</span>.navi.navigationBar.hidden = <span class="literal">YES</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>这时候 iOS 有自己的<code>navigationController</code>， RN 也有它的 <code>navigator</code>，虽然表现形式一样，但是相互之间并不能真正调用彼此，必须要有一个方法在中间搭桥。这就需要之前的<a href="http://www.jianshu.com/p/2595a558be29" target="_blank" rel="external">RN 调用 Native模块</a>中的调用方法</p>
+<ul>
+<li>实现协议 <code>&lt;RCTBridgeModule&gt;</code></li>
+<li>实现跳转方法 <code>RCT_EXPORT_METHOD</code></li>
+<li><p>RN 调用方法，进行跳转和传参</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NativeViewController.m</span></div><div class="line">RCT_EXPORT_MODULE(NativeVC);</div><div class="line"></div><div class="line">  <span class="comment">// RN 调用该方法，并且传参</span></div><div class="line">RCT_EXPORT_METHOD(goToNextWith:(NSString *)aStr) &#123;</div><div class="line">   <span class="comment">// 这里必须返回主线程进行 push</span></div><div class="line">   dispatch_async(dispatch_get_main_queue(), ^&#123;</div><div class="line">       AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication] delegate];</div><div class="line">       self.paramsString = aStr;</div><div class="line">       [app.navi pushViewController:self animated:YES];</div><div class="line">   &#125;);</div><div class="line"> </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// second.js</span></div><div class="line"><span class="keyword">import</span> &#123;NativeModules&#125; <span class="keyword">from</span> <span class="string">'react-native'</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> native = NativeModules.NativeVC;</div><div class="line"></div><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">Text</span> <span class="attr">onPress</span>=<span class="string">&#123;()</span>=&gt;</span>&#123;</span></div><div class="line">       native.goToNextWith('我是从js过来的');</div><div class="line">    &#125;&#125;&gt;</div><div class="line">      跳到Native</div><div class="line"><span class="tag">&lt;/<span class="name">Text</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>最后就是从 iOS 再回到 RN，这个就比较简单了，其实就是第 1 步的手动实现</p>
+<ul>
+<li>创建下一个 VC <code>NextNativeViewController</code></li>
+<li><code>RCTRootView</code> 替换 <code>VC.view</code></li>
+<li><p>传参是通过 <code>initialProperties:</code> 字典传递的，当然也可以手动赋值属性 <code>rootView.appProperties</code></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// NextNativeViewController.m</span></div><div class="line"> NSDictionary *dic = @&#123;@<span class="string">"text"</span>: @<span class="string">"从Xcode传过来的参数"</span>&#125;;</div><div class="line">   NSURL *jsCodeLocation;</div><div class="line"> </div><div class="line">   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] <span class="string">jsBundleURLForBundleRoot:</span>@<span class="string">"NextSecond"</span> <span class="string">fallbackResource:</span>nil];</div><div class="line"> </div><div class="line">   RCTRootView *rootView = [[RCTRootView alloc] <span class="string">initWithBundleURL:</span>jsCodeLocation <span class="string">moduleName:</span>@<span class="string">"NextSecond"</span> <span class="string">initialProperties:</span>dic <span class="string">launchOptions:</span>nil];</div><div class="line">   rootView.backgroundColor = [[UIColor alloc] <span class="string">initWithRed:</span><span class="number">1.0</span>f <span class="string">green:</span><span class="number">1.0</span>f <span class="string">blue:</span><span class="number">1.0</span>f <span class="string">alpha:</span><span class="number">1</span>];</div><div class="line"> </div><div class="line">   self.view = rootView;</div><div class="line">   </div><div class="line">   <span class="comment">// NextSecond.js </span></div><div class="line">   export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">NextSecond</span> <span class="keyword">extends</span> <span class="title">Component</span> &#123;</span>&#125;</div><div class="line">   <span class="comment">// 注册'NextSecond' 必须跟 moduleName 一致</span></div><div class="line">   AppRegistry.registerComponent(<span class="string">'NextSecond'</span>, ()=&gt; NextSecond);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>这时候外层使用 iOS 的 <code>VC</code>，内层使用 RN 的 <code>rootView</code>，你可以在 js 文件中处理所有UI和逻辑。但是，跳转下一个页面的时候，还是只能按照第 6 步的方式进行包装，如果想像第 3 步那样，就必须再一次实现第 2 步，重新初始化一个 RN 的 <code>navigator</code>, 并设置 <code>component</code></p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;NavigatorIOS</div><div class="line"></div><div class="line">     initialRoute=&#123;&#123;</div><div class="line">         component: RealView,</div><div class="line">         title: <span class="string">'RealView'</span>,</div><div class="line">         passProps:&#123;text: this.props.text&#125;</div><div class="line"></div><div class="line">     &#125;&#125;</div><div class="line">     barTintColor= <span class="string">'cyan'</span></div><div class="line">     style=&#123;&#123;flex: <span class="number">1</span>&#125;&#125;</div><div class="line"></div><div class="line"></div><div class="line"> /&gt;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><img src="http://oeb4c30x3.bkt.clouddn.com/QQ20161218-1.png" alt="RN -&gt; N"></p>
+<p>简单画了个流程图可能会清晰易懂一点。<a href="https://github.com/LionWY/React-Native-Test/tree/master/RNJump" target="_blank" rel="external">源码这里</a></p>
+<p>原本还想写点，反过来的情况，即，App 大部分是 <code>Native</code> 实现的，部分页面需要 <code>RN</code> 实现，这之间怎么跳转、传参，又想了想，几乎一样，就不啰嗦了，虽然当初不明白的时候想了好久，但真正想明白了，其实很简单。当然也写了个demo，有兴趣可以看看<a href="https://github.com/LionWY/React-Native-Test/tree/master/Jump" target="_blank" rel="external">这里</a>。</p>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><ol>
+<li><p><code>RN</code> 本质上就是写界面UI的，声明了 <code>RCTRootView</code> 嵌在 <code>ViewController</code>里面。不过这个 view 在 RN 中可以当成 VC 来使用，真正跳转到 Native 的时候，就显露本质了。</p>
+</li>
+<li><p>iOS 中的 <code>navigationController.navigationBar</code> 跟 RN 中的 <code>navigator</code> 虽然表现形式相同，但并不能共用，而且 iOS 会覆盖RN的实现。因此，必须分开处理，iOS 中就需要隐藏 <code>navigationBar</code></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)viewWillAppear:(<span class="built_in">BOOL</span>)animated</div><div class="line">&#123;</div><div class="line">	    [<span class="keyword">super</span> viewWillAppear:animated];</div><div class="line">	    <span class="keyword">self</span>.navigationController.navigationBar.hidden = <span class="literal">NO</span>;</div><div class="line">    </div><div class="line"> &#125;</div><div class="line">- (<span class="keyword">void</span>)viewWillDisappear:(<span class="built_in">BOOL</span>)animated</div><div class="line">&#123;</div><div class="line">	    [<span class="keyword">super</span> viewWillDisappear:animated];</div><div class="line">	    <span class="keyword">self</span>.navigationController.navigationBar.hidden = <span class="literal">YES</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 当然如果是自定义导航栏的话不用考虑这个问题。</p>
+</li>
+<li><p>RN 和 N 之间自由切换，目前想到的是这个方法，当然还没研究源码， 后续也许会有更好的解决办法，可以共用一个导航栏，而不必分开处理。</p>
+</li>
+<li><p>浅薄之见，如果有错误的地方，万望指正，感激不尽！</p>
+</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;其实在学习 RN 的时候，一直都有种想法，RN 在界面布局上确有其独到之处，但有时候并不如 &lt;code&gt;Native&lt;/code&gt; 来的舒服，而且第三方的控件/组件也没有 &lt;code&gt;Native&lt;/code&gt; 的丰富，因此就想有些界面能不能 &lt;code&gt;Native&lt;/c
+    
+    </summary>
+    
+      <category term="react native" scheme="http://lionwy.github.io/categories/react-native/"/>
+    
+    
+      <category term="RN" scheme="http://lionwy.github.io/tags/RN/"/>
+    
+      <category term="Native" scheme="http://lionwy.github.io/tags/Native/"/>
+    
+  </entry>
   
   <entry>
     <title>React Native 调用 Native 模块</title>
@@ -308,7 +383,7 @@
     <link href="http://lionwy.github.io/%E8%AE%B0React-Native-%E7%BB%84%E4%BB%B6/"/>
     <id>http://lionwy.github.io/记React-Native-组件/</id>
     <published>2016-11-28T02:48:49.000Z</published>
-    <updated>2016-11-28T03:08:23.000Z</updated>
+    <updated>2016-12-14T08:49:28.000Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/1929911-4155623a1eb9a829.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="茫茫多"></p>
 <h2 id="Flex-布局"><a href="#Flex-布局" class="headerlink" title="Flex 布局:"></a>Flex 布局:</h2><ol>
@@ -418,7 +493,7 @@
 </ul>
 <h2 id="NavigatorIOS："><a href="#NavigatorIOS：" class="headerlink" title="NavigatorIOS："></a>NavigatorIOS：</h2><ol>
 <li><p><code>initialRoute</code></p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="number">1.</span> <span class="string">component:</span></div><div class="line"><span class="number">2.</span> <span class="string">title:</span></div><div class="line"><span class="number">3.</span> <span class="string">titleImage:</span> require(<span class="string">'./img/icon1.png'</span>)</div><div class="line"><span class="number">4.</span> <span class="string">passProps:</span>参数传递，跟上面区分</div><div class="line"><span class="number">5.</span> <span class="string">backButtonTitle:</span></div><div class="line"><span class="number">6.</span> <span class="string">backButtonIcon:</span> </div><div class="line"><span class="number">7.</span> <span class="string">leftButtonTitle:</span></div><div class="line"><span class="number">8.</span> <span class="string">onLeftButtonPress:</span></div><div class="line"><span class="number">9.</span> <span class="string">navigationBarHidden:</span></div><div class="line"><span class="number">10.</span> <span class="string">shadowHidden:</span></div><div class="line"><span class="number">11.</span> <span class="string">tintColor:</span></div><div class="line"><span class="number">12.</span> <span class="string">titleTextColor:</span></div><div class="line"><span class="number">13.</span> <span class="string">translucent:</span></div><div class="line"></div><div class="line"></div><div class="line">&#123;</div><div class="line"><span class="symbol">	leftButtonTitle:</span> <span class="string">'back'</span>,</div><div class="line"><span class="symbol">	rightButtonIcon:</span> (require(<span class="string">'./img/left.png'</span>)),</div><div class="line">	onLeftButtonPress()&#123;</div><div class="line">	     navigator.pop()</div><div class="line">	 &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="number">1.</span> <span class="string">component:</span></div><div class="line"><span class="number">2.</span> <span class="string">title:</span></div><div class="line"><span class="number">3.</span> <span class="string">titleImage:</span> require(<span class="string">'./img/icon1.png'</span>)</div><div class="line"><span class="number">4.</span> <span class="string">passProps:</span>参数传递，跟上面区分</div><div class="line"><span class="number">5.</span> <span class="string">backButtonTitle:</span></div><div class="line"><span class="number">6.</span> <span class="string">backButtonIcon:</span> </div><div class="line"><span class="number">7.</span> <span class="string">leftButtonTitle:</span></div><div class="line"><span class="number">8.</span> <span class="string">onLeftButtonPress:</span></div><div class="line"><span class="number">9.</span> <span class="string">navigationBarHidden:</span></div><div class="line"><span class="number">10.</span> <span class="string">shadowHidden:</span></div><div class="line"><span class="number">11.</span> <span class="string">tintColor:</span></div><div class="line"><span class="number">12.</span> <span class="string">titleTextColor:</span></div><div class="line"><span class="number">13.</span> <span class="string">translucent:</span></div><div class="line"></div><div class="line"></div><div class="line">&#123;</div><div class="line"><span class="symbol">	leftButtonTitle:</span> <span class="string">'back'</span>,</div><div class="line"><span class="symbol">	rightButtonIcon:</span> (require(<span class="string">'./img/left.png'</span>)),</div><div class="line"><span class="symbol">	onLeftButtonPress:</span> ()=&gt;&#123;</div><div class="line">	     <span class="keyword">this</span>.props.navigator.pop()</div><div class="line">	 &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
 </li>
 <li><p><code>interactivePopGestureEnabled</code></p>
 </li>
