@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lionwy.github.io/"/>
-  <updated>2016-12-26T03:13:50.000Z</updated>
+  <updated>2016-12-26T03:21:52.000Z</updated>
   <id>http://lionwy.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://lionwy.github.io/Autorelease-%E8%AF%A6%E8%A7%A3/"/>
     <id>http://lionwy.github.io/Autorelease-详解/</id>
     <published>2016-12-26T03:06:34.000Z</published>
-    <updated>2016-12-26T03:13:50.000Z</updated>
+    <updated>2016-12-26T03:21:52.000Z</updated>
     
     <content type="html"><![CDATA[<h1 id="Autorelease"><a href="#Autorelease" class="headerlink" title="Autorelease"></a>Autorelease</h1><blockquote>
 <p>一个对象调用 <code>autorelease</code> 方法，就会被自动添加到最近的自动释放池 <code>autoreleasepool</code>，只有当自动释放池被销毁的时候，才会执行 <code>release</code> 方法，进行释放。</p>
@@ -28,6 +28,7 @@
 <ul>
 <li>下文源码是当前最新版本<a href="https://opensource.apple.com/tarballs/objc4/" target="_blank" rel="external">objc4-706.tar.gz</a>，跟之前版本会有点差别，没有了特别牛的<code>POOL_SENTINEL</code>（哨兵对象），改为了<code>POOL_BOUNDARY</code>（边界对象），可能更好理解一点。</li>
 </ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1929911-c3f9bffc332f4975.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="autoreleasepool"></p>
 <h2 id="1-入口"><a href="#1-入口" class="headerlink" title="1. 入口"></a>1. 入口</h2><blockquote>
 <p>runtime 的 <code>NSObject.mm</code> 文件中 <code>autorelease</code> 方法</p>
 </blockquote>
