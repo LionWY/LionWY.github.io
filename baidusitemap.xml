@@ -5,7 +5,7 @@
     
   <url>
     <loc>http://lionwy.github.io/Autorelease-%E8%AF%A6%E8%A7%A3/</loc>
-    <lastmod>2016-12-26T03:21:52.000Z</lastmod>
+    <lastmod>2016-12-26T03:43:48.000Z</lastmod>
     <data>
         <display>
         <title>Autorelease 详解</title>
@@ -226,9 +226,9 @@
         <title>图片加载之AFNetwork（上）</title>
         <pubTime>2016-10-18T09:40:26.000Z</pubTime>
         
-        <tag>图片</tag>
-         
         <tag>AFNetwork</tag>
+         
+        <tag>图片</tag>
          
          
            
@@ -248,9 +248,9 @@
         <title>图片加载之AFNetwork（下）</title>
         <pubTime>2016-10-19T09:52:56.000Z</pubTime>
         
-        <tag>图片</tag>
-         
         <tag>AFNetwork</tag>
+         
+        <tag>图片</tag>
          
          
            
