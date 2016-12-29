@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://lionwy.github.io/about/index.html</loc>
+    
+    <lastmod>2016-12-29T03:35:40.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://lionwy.github.io/Autorelease-%E8%AF%A6%E8%A7%A3/</loc>
     
     <lastmod>2016-12-26T03:43:48.000Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>http://lionwy.github.io/%E8%AE%B0React-Native-%E7%BB%84%E4%BB%B6/</loc>
     
     <lastmod>2016-12-14T08:49:28.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://lionwy.github.io/about/index.html</loc>
-    
-    <lastmod>2016-12-13T00:59:34.000Z</lastmod>
     
   </url>
   
