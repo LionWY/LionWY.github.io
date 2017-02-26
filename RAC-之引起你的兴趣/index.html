@@ -108,7 +108,7 @@
 
 监听 control 点击
 从此告别 addTarget 和 btnClick
-1234[[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(UIButton *btn) &amp;#123;   // btn, 即 self.loginBtn   // 这里执">
+1234[[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(UIButton *btn) &amp;#123;   // btn, 即 self.loginBtn   // 这里">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RAC 之引起你的兴趣">
 <meta property="og:url" content="http://lionwy.github.io/RAC-之引起你的兴趣/index.html">
@@ -117,15 +117,17 @@
 
 监听 control 点击
 从此告别 addTarget 和 btnClick
-1234[[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(UIButton *btn) &amp;#123;   // btn, 即 self.loginBtn   // 这里执">
-<meta property="og:updated_time" content="2017-02-26T11:42:43.000Z">
+1234[[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(UIButton *btn) &amp;#123;   // btn, 即 self.loginBtn   // 这里">
+<meta property="og:image" content="http://oeb4c30x3.bkt.clouddn.com/20170226195047_mJevEQ_ng-32703.jpeg">
+<meta property="og:updated_time" content="2017-02-26T12:06:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RAC 之引起你的兴趣">
 <meta name="twitter:description" content="UIControl
 
 监听 control 点击
 从此告别 addTarget 和 btnClick
-1234[[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(UIButton *btn) &amp;#123;   // btn, 即 self.loginBtn   // 这里执">
+1234[[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(UIButton *btn) &amp;#123;   // btn, 即 self.loginBtn   // 这里">
+<meta name="twitter:image" content="http://oeb4c30x3.bkt.clouddn.com/20170226195047_mJevEQ_ng-32703.jpeg">
 
 
 
@@ -386,7 +388,8 @@
       
 
       
-        <ol>
+        <p><img src="http://oeb4c30x3.bkt.clouddn.com/20170226195047_mJevEQ_ng-32703.jpeg" alt=""></p>
+<ol>
 <li><p>UIControl</p>
 <ul>
 <li>监听 control 点击</li>
@@ -435,17 +438,14 @@
 <li><p>遍历</p>
 <figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSArray *array = @[@1, @2, @3, @4, @5];</div><div class="line"></div><div class="line">[array.rac_sequence.signal subscribeNext:^(id x) &#123;</div><div class="line">    // x 即 数组<span class="built_in"> array </span>的元素</div><div class="line"> &#125;];</div></pre></td></tr></table></figure>
 </li>
+<li><p>过滤 <code>filter</code>，并获取过滤后的数组</p>
+<figure class="highlight golo"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> NSArray *<span class="keyword">filter</span> = [[<span class="keyword">array</span>.rac_sequence <span class="keyword">filter</span>:^BOOL(id value) &#123;</div><div class="line">    <span class="keyword">return</span>  [value integerValue] &gt; <span class="number">2</span>;</div><div class="line">&#125;] <span class="keyword">array</span>];</div></pre></td></tr></table></figure>
+</li>
+<li><p>匹配、映射 <code>map</code>，变换元素并获取新数组</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSArray</span> *map = [[array.rac_sequence map:^<span class="keyword">id</span>(<span class="keyword">id</span> value) &#123;</div><div class="line">        </div><div class="line">   <span class="built_in">NSInteger</span> a = [value integerValue] * [value integerValue];</div><div class="line">   </div><div class="line">   <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%ld"</span>, a];</div><div class="line">   </div><div class="line">&#125;] array];</div></pre></td></tr></table></figure>
+</li>
 </ul>
 </li>
-</ol>
-<pre><code>* 过滤 `filter`，并获取过滤后的数组
-
-<figure class="highlight golo"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> NSArray *<span class="keyword">filter</span> = [[<span class="keyword">array</span>.rac_sequence <span class="keyword">filter</span>:^BOOL(id value) &#123;</div><div class="line">    <span class="keyword">return</span>  [value integerValue] &gt; <span class="number">2</span>;</div><div class="line">&#125;] <span class="keyword">array</span>];</div></pre></td></tr></table></figure>
-
-* 匹配、映射 `map`，变换元素并获取新数组
-
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSArray</span> *map = [[array.rac_sequence map:^<span class="keyword">id</span>(<span class="keyword">id</span> value) &#123;</div><div class="line">        </div><div class="line">   <span class="built_in">NSInteger</span> a = [value integerValue] * [value integerValue];</div><div class="line">   </div><div class="line">   <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%ld"</span>, a];</div><div class="line">   </div><div class="line">&#125;] array];</div></pre></td></tr></table></figure>
-</code></pre><ol>
 <li><p>字典</p>
 <ul>
 <li><code>rac_keySequence</code> 和 <code>rac_valueSequence</code> 跟数组一样</li>
@@ -474,10 +474,14 @@
 </li>
 <li><p>一通组合拳：</p>
 <ol>
-<li>判断用户名是否符合规则，</li>
-<li>用户名正确之后，进行判断密码是否符合规则</li>
-<li>密码正确，进行请求验证，成功之后返回请求结果</li>
-<li>返回主线程根据结果更新界面 UI</li>
+<li><p>判断用户名是否符合规则，</p>
+</li>
+<li><p>用户名正确之后，进行判断密码是否符合规则</p>
+</li>
+<li><p>密码正确，进行请求验证，成功之后返回请求结果</p>
+</li>
+<li><p>返回主线程根据结果更新界面 UI</p>
+</li>
 </ol>
 </li>
 </ol>
