@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lionwy.github.io/"/>
-  <updated>2016-12-26T03:43:48.000Z</updated>
+  <updated>2017-02-26T11:40:25.000Z</updated>
   <id>http://lionwy.github.io/</id>
   
   <author>
@@ -14,6 +14,389 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Load 方法 暨 程序的加载顺序</title>
+    <link href="http://lionwy.github.io/Load-%E6%96%B9%E6%B3%95-%E6%9A%A8-%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/"/>
+    <id>http://lionwy.github.io/Load-方法-暨-程序的加载顺序/</id>
+    <published>2017-02-26T11:28:02.000Z</published>
+    <updated>2017-02-26T11:40:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="http://oeb4c30x3.bkt.clouddn.com/20170226193145_W6qoAJ_luis-llerena-14739.jpeg" alt=""></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>众所周知，App 的入口是 <code>main</code> 函数，而在此之前，我们了解到的是系统会自动调用 <code>load</code> 方法。而且是先调用父类的，再是自己的，最后才是分类的。而为什么是这样呢，不清楚。<br>下面所有的 <code>load</code> 方法， 都指 <code>+ (void)load {}</code> 方法。</p>
+<h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><p>借助于<a href="https://github.com/isaacselement/objc4-706" target="_blank" rel="external">可调试的 objc 源码</a> 了解了 <code>load</code> 方法的具体流程。</p>
+<ol>
+<li><p>创建一个类 <code>XXObject</code>，新建一个 <code>load</code> 方法，打断点，调用栈显示，引出了 <code>dyld</code> 和 <code>ImageLoader</code>。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1929911-d052792e10260e74.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</li>
+<li><p>dyld: The Dynamic Link Editor</p>
+<ul>
+<li><p>Apple 的动态链接库，系统内核做好启动程序的初始准备后，将其他事物交给 dyld 处理</p>
+</li>
+<li><p>详细可以看 <a href="http://blog.sunnyxx.com/2014/08/30/objc-pre-main/" target="_blank" rel="external">sunnyxx</a></p>
+</li>
+</ul>
+</li>
+<li><p>ImageLoader：</p>
+<ul>
+<li><p>images 表示二进制文件（可执行文件或者动态链接库 .so 文件）编译后的符号、代码等</p>
+</li>
+<li><p>ImageLoader 作用是将这些文件加载进内存，且每一个文件对应一个 ImageLoader 实例来负责加载</p>
+<ul>
+<li>在程序运行时它先将动态链接的 image 递归加载</li>
+<li>再从可执行文件 image 递归加载所有符号</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="load-流程"><a href="#load-流程" class="headerlink" title="load 流程"></a>load 流程</h2><ul>
+<li>在分析 load 之前，还需要了解下 runtime 的初始化入口。</li>
+</ul>
+<h3 id="objc-init"><a href="#objc-init" class="headerlink" title="__objc_init"></a>__objc_init</h3><blockquote>
+<p>Bootstrap initialization. Registers our image notifier with dyld.<br>Called by libSystem BEFORE library initialization time</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">_</span>objc_init(<span class="keyword">void</span>)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> initialized = <span class="literal">false</span>;</div><div class="line">    <span class="keyword">if</span> (initialized) <span class="keyword">return</span>;</div><div class="line">    initialized = <span class="literal">true</span>;</div><div class="line">    </div><div class="line">    <span class="comment">// 环境初始化</span></div><div class="line">    environ_init();</div><div class="line">    tls_init();</div><div class="line">    static_init();</div><div class="line">    lock_init();</div><div class="line">    <span class="comment">// 初始化 libobjc 的异常处理系统</span></div><div class="line">    exception_init();</div><div class="line">    <span class="comment">// 添加通知、回调</span></div><div class="line">    <span class="number">_</span>dyld_objc_notify_register(&amp;map_2_images, load_images, unmap_image);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li>引导初始化</li>
+<li><p>注册通知，当二进制文件 images 加载到内存时，通知 runtime 进行处理。</p>
+<ul>
+<li><p><code>map_2_images</code>：处理已经被 mapped 的images</p>
+</li>
+<li><p><code>load_images</code>：处理 已被 mapped 的 images 中的 +load 方法</p>
+</li>
+<li><p><code>unmap_image</code>：处理将要 unmap 的 images</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-load-images"><a href="#1-load-images" class="headerlink" title="1. load_images"></a>1. load_images</h3><blockquote>
+<p>Process +load in the given images which are being mapped in by dyld</p>
+</blockquote>
+<ul>
+<li>处理 dyld 提供的已被 map_images 处理后的 images 中的 +load 方法</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">load_images</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *path <span class="number">__u</span>nused, <span class="keyword">const</span> <span class="keyword">struct</span> mach_header *mh)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Return without taking locks if there are no +load methods here.</span></div><div class="line">    <span class="comment">// 如果没有 load 方法，直接返回，</span></div><div class="line">    <span class="keyword">if</span> (!hasLoadMethods((<span class="keyword">const</span> headerType *)mh)) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    <span class="keyword">recursive_mutex_locker_t</span> lock(loadMethodLock);</div><div class="line"></div><div class="line">    <span class="comment">// Discover load methods</span></div><div class="line">    <span class="comment">// 收集 load 方法，为下面调用做准备</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">rwlock_writer_t</span> lock2(runtimeLock);</div><div class="line">        <span class="comment">// 准备所有的 load 方法</span></div><div class="line">        prepare_load_methods((<span class="keyword">const</span> headerType *)mh);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Call +load methods (without runtimeLock - re-entrant)</span></div><div class="line">    <span class="comment">// 调用 load 方法</span></div><div class="line">    call_load_methods();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>快速查询，类和分类的方法列表中是否含有 <code>load</code> 方法，如果没有，直接返回</p>
+</li>
+<li><p>递归查询所有的 <code>load</code> 方法，并存储起来</p>
+</li>
+<li><p>依次调用所有的 <code>load</code> 方法</p>
+</li>
+</ol>
+<h4 id="1-2-prepare-load-methods"><a href="#1-2-prepare-load-methods" class="headerlink" title="1.2 prepare_load_methods"></a>1.2 prepare_load_methods</h4><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">void prepare_load_methods(<span class="keyword">const</span> headerType *mhdr)</div><div class="line">&#123;</div><div class="line">    size_t <span class="keyword">count</span>, i;</div><div class="line"></div><div class="line">    runtimeLock.assertWriting();</div><div class="line"></div><div class="line">    <span class="comment">// 收集所有类的列表</span></div><div class="line">    classref_t *classlist = </div><div class="line">        _getObjc2NonlazyClassList(mhdr, &amp;<span class="keyword">count</span>);</div><div class="line">    </div><div class="line">    <span class="keyword">for</span> (i = 0; i &lt; <span class="keyword">count</span>; i++) &#123;</div><div class="line">        <span class="comment">// 收集当前类和父类的 load 方法，父类优先</span></div><div class="line">        </div><div class="line">        schedule_class_load(remapClass(classlist[i]));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 获取所有的分类</span></div><div class="line">    category_t **categorylist = _getObjc2NonlazyCategoryList(mhdr, &amp;<span class="keyword">count</span>);</div><div class="line">    <span class="keyword">for</span> (i = 0; i &lt; <span class="keyword">count</span>; i++) &#123;</div><div class="line">        category_t *<span class="keyword">cat</span> = categorylist[i];</div><div class="line">        <span class="comment">// 获取到分类对应的类的指针</span></div><div class="line">        <span class="keyword">Class</span> cls = remapClass(<span class="keyword">cat</span>-&gt;cls);</div><div class="line">        <span class="comment">// 若链接返回 nil， 如果是 弱链接，就跳过</span></div><div class="line">        <span class="keyword">if</span> (!cls) <span class="keyword">continue</span>;  <span class="comment">// category for ignored weak-linked class</span></div><div class="line">        </div><div class="line">        <span class="comment">// 对类进行第一次初始化，包括 读写空间，返回真正的类结构</span></div><div class="line">        realizeClass(cls);</div><div class="line">        <span class="keyword">assert</span>(cls-&gt;ISA()-&gt;isRealized());</div><div class="line">        <span class="comment">// 把 分类加入到一个全局列表中</span></div><div class="line">        add_category_to_loadable_list(<span class="keyword">cat</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>存储当前类和父类的所有 <code>load</code> 方法，其中父类优先</p>
+</li>
+<li><p>存储分类的 <code>load</code> 方法</p>
+</li>
+</ol>
+<h5 id="1-2-1-schedule-class-load"><a href="#1-2-1-schedule-class-load" class="headerlink" title="1.2.1 schedule_class_load"></a>1.2.1 schedule_class_load</h5><blockquote>
+<p>Schedule +load for classes in this image, any un-+load-ed superclasses in other images, and any categories in this image.</p>
+</blockquote>
+<ul>
+<li>该方法是递归函数，找到未被加载的最顶级的父类，然后依次存储</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> void schedule_class_load(<span class="class"><span class="keyword">Class</span> <span class="title">cls</span>)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (!cls) <span class="keyword">return</span>;</div><div class="line">    assert(cls-&gt;isRealized());  <span class="comment">// _read_images should realize</span></div><div class="line"></div><div class="line">    <span class="comment">// A. 判断 类 的 load 方法 是否被调用</span></div><div class="line">    <span class="keyword">if</span> (cls-&gt;data()-&gt;flags &amp; RW_LOADED) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">    <span class="comment">// Ensure superclass-first ordering</span></div><div class="line">    schedule_class_load(cls-&gt;superclass);</div><div class="line"></div><div class="line">    <span class="comment">// 把 含有 load 方法的类 添加到 全局的 loadable_classes</span></div><div class="line">    add_class_to_loadable_list(cls);</div><div class="line">    <span class="comment">// 添加标记，对应 A</span></div><div class="line">    cls-&gt;setInfo(RW_LOADED); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="1-2-2-add-class-to-loadable-list"><a href="#1-2-2-add-class-to-loadable-list" class="headerlink" title="1.2.2 add_class_to_loadable_list"></a>1.2.2 add_class_to_loadable_list</h5><blockquote>
+<p>Class cls has just become connected. Schedule it for +load if it implements a +load method</p>
+</blockquote>
+<ul>
+<li>存储实现了 <code>load</code> 方法的类</li>
+</ul>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">void add_class_to_loadable_list(Class <span class="keyword">cls</span>)</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 方法指针</span></div><div class="line">    IMP method;</div><div class="line"></div><div class="line">    </div><div class="line">    loadMethodLock.assertLocked();</div><div class="line">    </div><div class="line">    <span class="comment">// 方法内部会根据 方法名字 判断是否 load 方法，并返回</span></div><div class="line">    method = <span class="keyword">cls</span>-&gt;getLoadMethod();</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (!method) <span class="keyword">return</span>;  <span class="comment">// Don't bother if cls has no +load method</span></div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (PrintLoading) &#123;</div><div class="line">        _objc_inform(<span class="string">"LOAD: class '%s' scheduled for +load"</span>, </div><div class="line">                     <span class="keyword">cls</span>-&gt;nameForLogging());</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (loadable_classes_used == loadable_classes_allocated) &#123;</div><div class="line">        loadable_classes_allocated = loadable_classes_allocated*<span class="number">2</span> + <span class="number">16</span>;</div><div class="line">        loadable_classes = (<span class="keyword">struct</span> loadable_class *)</div><div class="line">            realloc(loadable_classes,</div><div class="line">                              loadable_classes_allocated *</div><div class="line">                              sizeof(<span class="keyword">struct</span> loadable_class));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    loadable_classes[loadable_classes_used].<span class="keyword">cls</span> = <span class="keyword">cls</span>;</div><div class="line">    loadable_classes[loadable_classes_used].method = method;</div><div class="line">    loadable_classes_used++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>根据 “load” 获取对应方法的指针。其实方法实质上也是个对象，有它自己的成员变量，如下：</p>
+ <figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="keyword">method_t</span> &#123;</div><div class="line">    SEL name; </div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *types; </div><div class="line">    IMP imp;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>静态全局数组存储，如果数组已满，动态扩容</p>
+<ul>
+<li><code>loadable_classes</code>：数组，里面元素是结构体 <code>loadable_class</code>，存储类名和方法指针。</li>
+<li><code>loadable_classes_used</code>：数组内对象的个数，即已经存储的对象数量</li>
+<li><code>loadable_classes_allocated</code>：数组大小</li>
+</ul>
+</li>
+<li><p><code>add_category_to_loadable_list</code> 分类存储方法，几乎一致</p>
+</li>
+</ol>
+<h3 id="2-call-load-methods"><a href="#2-call-load-methods" class="headerlink" title="2. call_load_methods"></a>2. call_load_methods</h3><blockquote>
+<p>Call all pending class and category +load methods.<br>Class +load methods are called superclass-first.<br>Category +load methods are not called until after the parent class’s +load</p>
+</blockquote>
+<ul>
+<li>依次执行已经被存储的 <code>load</code> 方法</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> call_load_methods(<span class="keyword">void</span>)</div><div class="line">&#123;</div><div class="line">    <span class="comment">// loading 设置为全局静态变量，保证只初始化一次，</span></div><div class="line">    <span class="comment">// 一旦执行一次， loading 即为 YES，</span></div><div class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> loading = <span class="literal">NO</span>;</div><div class="line">    <span class="keyword">bool</span> more_categories;</div><div class="line"></div><div class="line">    loadMethodLock.assertLocked();</div><div class="line"></div><div class="line">    <span class="comment">// Re-entrant calls do nothing; the outermost call will finish the job.</span></div><div class="line">    <span class="keyword">if</span> (loading) <span class="keyword">return</span>;</div><div class="line">    loading = <span class="literal">YES</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 创建自动释放池，在自动释放池中进行方法调用</span></div><div class="line">    <span class="keyword">void</span> *pool = objc_autoreleasePoolPush();</div><div class="line"></div><div class="line">    <span class="keyword">do</span> &#123;</div><div class="line">        <span class="comment">// 1. Repeatedly call class +loads until there aren't any more</span></div><div class="line">        <span class="keyword">while</span> (loadable_classes_used &gt; <span class="number">0</span>) &#123;</div><div class="line">            call_class_loads();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// 2. Call category +loads ONCE</span></div><div class="line">        more_categories = call_category_loads();</div><div class="line"></div><div class="line">        <span class="comment">// 3. Run more +loads if there are classes OR more untried categories</span></div><div class="line">    &#125; <span class="keyword">while</span> (loadable_classes_used &gt; <span class="number">0</span>  ||  more_categories);</div><div class="line"></div><div class="line">    objc_autoreleasePoolPop(pool);</div><div class="line"></div><div class="line">    loading = <span class="literal">NO</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>首先，保证是首次执行， <code>load</code> 方法只会执行一次。</p>
+</li>
+<li><p>创建自动释放池，在池内执行方法，优化性能</p>
+</li>
+<li><p><code>do {} while</code> 循环执行，直到数组为空，且分类方法也执行完毕，不再有新的分类方法</p>
+</li>
+</ol>
+<h3 id="3-call-class-loads"><a href="#3-call-class-loads" class="headerlink" title="3. call_class_loads"></a>3. call_class_loads</h3><ul>
+<li><code>call_class_loads</code> 方法比较简单，主要看分类方法的调用，这里涉及到在运行期间，后续又添加的 <code>load</code> 分类方法</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">call_category_loads</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> i, shift;</div><div class="line">    <span class="keyword">bool</span> new_categories_added = NO;</div><div class="line">    </div><div class="line">    <span class="comment">// Detach current loadable list.</span></div><div class="line">    <span class="comment">// 1. 分离并获取当前的分类 列表 cats</span></div><div class="line">    <span class="keyword">struct</span> loadable_category *cats = loadable_categories;</div><div class="line">    <span class="keyword">int</span> used = loadable_categories_used;</div><div class="line">    <span class="keyword">int</span> allocated = loadable_categories_allocated;</div><div class="line">    loadable_categories = nil;</div><div class="line">    loadable_categories_allocated = <span class="number">0</span>;</div><div class="line">    loadable_categories_used = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="comment">// Call all +loads for the detached list.</span></div><div class="line">    <span class="comment">// 2. for 循环 进行调用 load 方法，执行完毕后，把分类置空</span></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; used; i++) &#123;</div><div class="line">        Category cat = cats[i].cat;</div><div class="line">        <span class="keyword">load_method_t</span> load_method = (<span class="keyword">load_method_t</span>)cats[i].method;</div><div class="line">        Class cls;</div><div class="line">        <span class="keyword">if</span> (!cat) <span class="keyword">continue</span>;</div><div class="line"></div><div class="line">        cls = <span class="number">_</span>category_getClass(cat);</div><div class="line">        <span class="keyword">if</span> (cls  &amp;&amp;  cls-&gt;isLoadable()) &#123;</div><div class="line">            <span class="keyword">if</span> (PrintLoading) &#123;</div><div class="line">                <span class="number">_</span>objc_inform(<span class="string">"LOAD: +[%s(%s) load]\n"</span>, </div><div class="line">                             cls-&gt;nameForLogging(), </div><div class="line">                             <span class="number">_</span>category_getName(cat));</div><div class="line">            &#125;</div><div class="line">            (*load_method)(cls, SEL_load);</div><div class="line">            cats[i].cat = nil;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Compact detached list (order-preserving)</span></div><div class="line">    <span class="comment">// 3. 将加载过的分类方法移除 分离列表，保留未被加载过的 分类方法</span></div><div class="line">    shift = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; used; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (cats[i].cat) &#123;</div><div class="line">            cats[i-shift] = cats[i];</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            shift++;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    used -= shift;</div><div class="line"></div><div class="line">    <span class="comment">// Copy any new +load candidates from the new list to the detached list.</span></div><div class="line">    <span class="comment">// 运行过程中是否有新添加的分类方法</span></div><div class="line">    new_categories_added = (loadable_categories_used &gt; <span class="number">0</span>);</div><div class="line">    </div><div class="line">    <span class="comment">// 4. 如果有，先存储在 分离列表 cats </span></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; loadable_categories_used; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (used == allocated) &#123;</div><div class="line">            allocated = allocated*<span class="number">2</span> + <span class="number">16</span>;</div><div class="line">            cats = (<span class="keyword">struct</span> loadable_category *)</div><div class="line">                <span class="built_in">realloc</span>(cats, allocated *</div><div class="line">                                  <span class="keyword">sizeof</span>(<span class="keyword">struct</span> loadable_category));</div><div class="line">        &#125;</div><div class="line">        cats[used++] = loadable_categories[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Destroy the new list.</span></div><div class="line">    <span class="comment">// 释放清空全局列表，以便后面重新赋值</span></div><div class="line">    <span class="keyword">if</span> (loadable_categories) <span class="built_in">free</span>(loadable_categories);</div><div class="line"></div><div class="line">    <span class="comment">// Reattach the (now augmented) detached list. </span></div><div class="line">    <span class="comment">// But if there's nothing left to load, destroy the list.</span></div><div class="line">    <span class="comment">// 5. 是否存在有新列表，并赋值给全局静态存储变量</span></div><div class="line">    <span class="keyword">if</span> (used) &#123;</div><div class="line">        loadable_categories = cats;</div><div class="line">        loadable_categories_used = used;</div><div class="line">        loadable_categories_allocated = allocated;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span> (cats) <span class="built_in">free</span>(cats);</div><div class="line">        loadable_categories = nil;</div><div class="line">        loadable_categories_used = <span class="number">0</span>;</div><div class="line">        loadable_categories_allocated = <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (PrintLoading) &#123;</div><div class="line">        <span class="keyword">if</span> (loadable_categories_used != <span class="number">0</span>) &#123;</div><div class="line">            <span class="number">_</span>objc_inform(<span class="string">"LOAD: %d categories still waiting for +load\n"</span>,</div><div class="line">                         loadable_categories_used);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> new_categories_added;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>上述代码中详细给出了5步，判断是否还有更多的分类方法，来决定是否继续在 <code>while</code>循环中执行。</p>
+</li>
+<li><p>这里着重提下，由于 OC 运行时的机制，系统之前已经收集完所有的 <code>load</code> 方法，并且正在执行 <code>load</code> 方法的时候，又有含有 <code>load</code> 方法的分类被添加进来，所以在执行分类的时候，又多出来 3、4、5 步，来保证所有的分类实现完毕。</p>
+</li>
+</ul>
+<h3 id="4-load"><a href="#4-load" class="headerlink" title="4. load"></a>4. load</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)load</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Load Hello World"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><p>从方法调用栈中，找到了系统在执行 <code>load</code> 前调用的方法：</p>
+<ol>
+<li><p>启动 dyld，将二进制文件初始化</p>
+</li>
+<li><p><code>ImageLoader</code> 把二进制文件加载进内存</p>
+</li>
+<li>runtime 执行<code>load_images</code>，执行所有的 <code>load</code>方法<ul>
+<li>使用一个全局数组从含有 <code>load</code> 方法的根父类到自身，依次添加</li>
+<li>使用另一个全局数组添加含有 <code>load</code> 方法的所有分类</li>
+<li>依次执行存储的 <code>load</code> 方法，父类 -&gt; 自身 -&gt; 分类</li>
+</ul>
+</li>
+<li>执行自定义的 <code>load</code> 方法</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.jianshu.com/p/1b8fb16d8a56" target="_blank" rel="external">load 的简单了解</a></p>
+<p><a href="http://blog.sunnyxx.com/2014/08/30/objc-pre-main/" target="_blank" rel="external">iOS 程序 main 函数之前发生了什么</a></p>
+<p><a href="https://github.com/Draveness/iOS-Source-Code-Analyze/blob/master/contents/objc/%E4%BD%A0%E7%9C%9F%E7%9A%84%E4%BA%86%E8%A7%A3%20load%20%E6%96%B9%E6%B3%95%E4%B9%88%EF%BC%9F.md" target="_blank" rel="external">你真的了解 load 方法么？</a></p>
+<p><a href="http://www.desgard.com/Load/" target="_blank" rel="external">load 方法全程跟踪</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;http://oeb4c30x3.bkt.clouddn.com/20170226193145_W6qoAJ_luis-llerena-14739.jpeg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;he
+    
+    </summary>
+    
+      <category term="源码" scheme="http://lionwy.github.io/categories/%E6%BA%90%E7%A0%81/"/>
+    
+    
+      <category term="load" scheme="http://lionwy.github.io/tags/load/"/>
+    
+      <category term="App 加载" scheme="http://lionwy.github.io/tags/App-%E5%8A%A0%E8%BD%BD/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RACCommand 粗解</title>
+    <link href="http://lionwy.github.io/RACCommand-%E7%B2%97%E8%A7%A3/"/>
+    <id>http://lionwy.github.io/RACCommand-粗解/</id>
+    <published>2017-02-26T11:27:37.000Z</published>
+    <updated>2017-02-26T11:42:28.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>学习 RAC 的过程中，<code>RACCommand</code> 是我一直很迷惑的点，感觉一直抓不到它的要点，不明白为何要这样使用。曾经想过用别的方法来替代，只要能找到替代的方法，暂时就没必要死磕，结果发现避免不了，那就解决他。</p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><blockquote>
+<p>RACCommand 最常用于两个地方，监听按钮点击，网络请求</p>
+</blockquote>
+<ol>
+<li><p>按钮点击，使用 RAC 有两种方式</p>
+<ul>
+<li><p><code>UIControl+RACSignalSupport</code></p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- <span class="params">(RACSignal *)</span>rac_signalForControlEvents:<span class="params">(UIControlEvents)</span>controlEvents;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><code>UIButton+RACCommandSupport</code> </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@<span class="keyword">property</span><span class="title"> </span>(nonatomic, strong) RACCommand *rac_command;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>第一种方式，也是我曾经想过替代 <code>RACCommand</code> 来处理按钮点击事件的方法</p>
+ <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">// 按钮是否可点击</span></div><div class="line">RAC(<span class="keyword">self</span>.commandBtn, enabled) = validSignal;</div><div class="line"></div><div class="line">[[[<span class="keyword">self</span>.commandBtn rac_signalForControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>] </div><div class="line"> <span class="comment">// flattenMap 生成新的信号，在信号中可以处理点击事件，并发送结果</span></div><div class="line">   flattenMap:^RACStream *(<span class="keyword">id</span> value) &#123;</div><div class="line">       <span class="keyword">return</span> [<span class="keyword">self</span> btnClickSignal];</div><div class="line">   &#125;] subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">       <span class="built_in">NSLog</span>(<span class="string">@"====%@"</span>, x); <span class="comment">// ====按钮点击了</span></div><div class="line">   &#125;];</div><div class="line">   </div><div class="line">- (RACSignal *)btnClickSignal &#123;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> [RACSignal createSignal:^RACDisposable *(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</div><div class="line">        </div><div class="line">        <span class="comment">/**</span></div><div class="line">         *   这里可以进行处理按钮点击后的事件，并把想要的结果传递出去</div><div class="line">         */</div><div class="line">        [subscriber sendNext:<span class="string">@"按钮点击了"</span>];</div><div class="line">        </div><div class="line">        [subscriber sendCompleted];</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>上述就是根据 <code>UIControl</code> 的分类信息，进行处理按钮点击事件的第一种方式。但是有一个问题：</p>
+</li>
+<li><p>你只有手动点击了按钮，并且是 <code>UIControlEventTouchUpInside</code> 的事件状态下才会执行 block 中的代码。</p>
+</li>
+<li>如果需要主动触发事件呢，而在老代码中，可以手动调用 <code>[self btnClick]</code>，所以就必须使用第二种方式，<code>RACCommand</code>。</li>
+</ul>
+</li>
+<li><p><code>RACCommand</code></p>
+<ul>
+<li><p>初始化赋值 <code>rac_command</code></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 初始化 command， enabled 表示按钮可否点击</span></div><div class="line">RACCommand *command = [[RACCommand alloc] initWithEnabled:validSignal </div><div class="line">                                             signalBlock:^RACSignal *(<span class="keyword">id</span> input) &#123;</div><div class="line">                                                 </div><div class="line">                                                <span class="keyword">return</span> [<span class="keyword">self</span> btnClickSignal];</div><div class="line">                                                 </div><div class="line">                                             &#125;];</div><div class="line"><span class="keyword">self</span>.commandBtn.rac_command = command;</div></pre></td></tr></table></figure>
+</li>
+<li><p>监听</p>
+<ul>
+<li><code>executionSignals</code> 是信号中的信号</li>
+<li>必须进行处理、转换，得到外层信号</li>
+<li>监听最外层的信号，才能获取到信号中的信息</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 1. 监听信号中的信号</span></div><div class="line">[command.executionSignals subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">    [x subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"---%@"</span>, x);</div><div class="line">    &#125;];</div><div class="line">    </div><div class="line">&#125;];</div><div class="line"></div><div class="line"><span class="comment">// 2. 使用 flattenMap 进行转换，返回最外层的信号</span></div><div class="line">[[command.executionSignals flattenMap:^RACStream *(<span class="keyword">id</span> value) &#123;</div><div class="line">   <span class="keyword">return</span> value;</div><div class="line">&#125;] subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">   <span class="built_in">NSLog</span>(<span class="string">@"---%@"</span>, x); </div><div class="line">&#125;];</div><div class="line"></div><div class="line"><span class="comment">// 3. switchToLatest 获取最新的信号，专门用于处理 信号中的信号</span></div><div class="line">[command.executionSignals.switchToLatest subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"---%@"</span>, x);</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>execute</code> 执行</p>
+<ul>
+<li>这也就是解决第一种方式无法主动触发事件方法。</li>
+<li>相当于调用 <code>[self btnClick]</code></li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 1. 返回的是 RACSignal，可以被订阅</span></div><div class="line">[command execute:<span class="literal">nil</span>];</div><div class="line"></div><div class="line"><span class="comment">// 2. 只有手动 执行命令，才能监听到信号</span></div><div class="line"><span class="comment">// 如果是 点击按钮, 这里是监听不到信息的</span></div><div class="line">[[command execute:<span class="literal">nil</span>] subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"execute---%@"</span>, x);</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>executing</code> 是否正在执行命令</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// executing 一开始就会监听一次，肯定是 0，一般会忽略（skip）一次 </span></div><div class="line"><span class="comment">// x 非 0 即 1，命令执行完毕/正在执行</span></div><div class="line"><span class="comment">// 执行一次命令，block 中会调用两次，正在执行-&gt;执行完毕</span></div><div class="line">[[command.executing skip: <span class="number">1</span>] subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">   <span class="keyword">if</span> ([x integerValue] == <span class="number">1</span>) &#123;</div><div class="line">       <span class="built_in">NSLog</span>(<span class="string">@"正在执行"</span>);</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">       <span class="built_in">NSLog</span>(<span class="string">@"执行完毕"</span>);</div><div class="line">   &#125;    </div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ol>
+<li><p>上述就是 <code>RACCommand</code> 在按钮点击事件中的处理，网络请求的话，代码几乎一致，流程都是一样的。在初始化 <code>RACCommand</code> 的内部，进行事件处理/网络请求，并把结果通过 <code>subscriber</code> 发送出去，外部通过订阅信号，就可以获取事件处理的结果，从而进行 UI 更新。</p>
+</li>
+<li><p><code>RACCommand</code> 本质上就是用来处理事件的，事件如何处理，事件中的数据如何传递，甚至事件的执行过程，都可以表现出来。</p>
+</li>
+<li><p>见识浅薄，如有疑惑，欢迎交流，求吐槽，求成长。</p>
+</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;学习 RAC 的过程中，&lt;code&gt;RACCommand&lt;/code&gt; 是我一直很迷惑的点，感觉一直抓不到它的要点，不明白为何要这样使用。曾
+    
+    </summary>
+    
+      <category term="ReactiveCocoa" scheme="http://lionwy.github.io/categories/ReactiveCocoa/"/>
+    
+    
+      <category term="RAC" scheme="http://lionwy.github.io/tags/RAC/"/>
+    
+      <category term="RACCommand" scheme="http://lionwy.github.io/tags/RACCommand/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RAC 之引起你的兴趣</title>
+    <link href="http://lionwy.github.io/RAC-%E4%B9%8B%E5%BC%95%E8%B5%B7%E4%BD%A0%E7%9A%84%E5%85%B4%E8%B6%A3/"/>
+    <id>http://lionwy.github.io/RAC-之引起你的兴趣/</id>
+    <published>2017-02-26T11:27:18.000Z</published>
+    <updated>2017-02-26T11:42:43.000Z</updated>
+    
+    <content type="html"><![CDATA[<ol>
+<li><p>UIControl</p>
+<ul>
+<li>监听 control 点击</li>
+<li><p>从此告别 <code>addTarget</code> 和 <code>btnClick</code></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[[<span class="keyword">self.loginBtn </span>rac_signalForControlEvents:UIControlEventTouchUpInside] <span class="keyword">subscribeNext:^(UIButton </span>*<span class="keyword">btn) </span>&#123;</div><div class="line">   // <span class="keyword">btn, </span>即 <span class="keyword">self.loginBtn</span></div><div class="line">   // 这里执行点击之后的操作</div><div class="line">&#125;]<span class="comment">;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>UITextField</p>
+<ul>
+<li>监听 textField 的 text 改变</li>
+<li><p>告别 <code>UITextFieldDelegate</code></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[<span class="keyword">self.myTF.rac_textSignal </span><span class="keyword">subscribeNext:^(NSString* </span>text) &#123;</div><div class="line">        </div><div class="line">  // text 即 <span class="keyword">self.myTF.text </span></div><div class="line">  // 每当 text 有改变时，就会进入到这个 <span class="keyword">block </span>中</div><div class="line">&#125;]<span class="comment">;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>UILabel</p>
+<ul>
+<li><p>把 label 的属性 <code>text</code> 绑定在 <code>UITextField</code> 上</p>
+<figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// <span class="built_in">self</span>.myLab.text 随着 <span class="built_in">self</span>.myTF.text 的改变而改变</div><div class="line">RAC(<span class="built_in">self</span>.myLab, text) = <span class="built_in">self</span>.myTF.rac_textSignal;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>监听属性改变 </p>
+<ul>
+<li>一旦 person 的 name 有变化，就进入 block 里面</li>
+<li><p>再不用写繁琐的 KVO</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[RACObserve(<span class="name">self.per</span>, name) subscribeNext:^(<span class="name">NSString</span> *name)</div><div class="line">&#123;</div><div class="line">    // name 即 self.per.name</div><div class="line">&#125;]<span class="comment">;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>监听通知信息</p>
+<ul>
+<li><p>一旦键盘 frame 有所变化，就进入 block 里面</p>
+</li>
+<li><p>内部已经进行通知释放，不需要再 <code>dealloc</code> 中 移除</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillChangeFrameNotification object:nil] subscribeNext:^(<span class="name">NSNotification</span> *notification) &#123;</div><div class="line">  NSLog(@<span class="string">"-----%@"</span>, notification.description)<span class="comment">;</span></div><div class="line">&#125;]<span class="comment">;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>发送通知还是之前的办法</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[NSNotificationCenter defaultCenter] postNotificationName:@<span class="string">"通知名称"</span> object:nil]<span class="comment">;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>数组</p>
+<ul>
+<li><p>遍历</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NSArray *array = @[@1, @2, @3, @4, @5];</div><div class="line"></div><div class="line">[array.rac_sequence.signal subscribeNext:^(id x) &#123;</div><div class="line">    // x 即 数组<span class="built_in"> array </span>的元素</div><div class="line"> &#125;];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<pre><code>* 过滤 `filter`，并获取过滤后的数组
+
+<figure class="highlight golo"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> NSArray *<span class="keyword">filter</span> = [[<span class="keyword">array</span>.rac_sequence <span class="keyword">filter</span>:^BOOL(id value) &#123;</div><div class="line">    <span class="keyword">return</span>  [value integerValue] &gt; <span class="number">2</span>;</div><div class="line">&#125;] <span class="keyword">array</span>];</div></pre></td></tr></table></figure>
+
+* 匹配、映射 `map`，变换元素并获取新数组
+
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">NSArray</span> *map = [[array.rac_sequence map:^<span class="keyword">id</span>(<span class="keyword">id</span> value) &#123;</div><div class="line">        </div><div class="line">   <span class="built_in">NSInteger</span> a = [value integerValue] * [value integerValue];</div><div class="line">   </div><div class="line">   <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%ld"</span>, a];</div><div class="line">   </div><div class="line">&#125;] array];</div></pre></td></tr></table></figure>
+</code></pre><ol>
+<li><p>字典</p>
+<ul>
+<li><code>rac_keySequence</code> 和 <code>rac_valueSequence</code> 跟数组一样</li>
+<li><p><code>rac_sequence</code> 需要 <code>RACTupleUnpack</code> 解包</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"> NSDictionary *<span class="keyword">dic </span>= @&#123;@<span class="string">"name"</span>: @<span class="string">"lion"</span>, @<span class="string">"age"</span>: @<span class="number">18</span>&#125;<span class="comment">;</span></div><div class="line"> [<span class="keyword">dic.rac_sequence.signal </span><span class="keyword">subscribeNext:^(id </span>x) &#123;</div><div class="line">    RACTupleUnpack(NSString *key, NSString *value) = x<span class="comment">;</span></div><div class="line">    </div><div class="line">    NSLog(@<span class="string">"\r\nkey: %@\r\nvalue: %@"</span>, key, value)<span class="comment">;</span></div><div class="line">&#125;]<span class="comment">;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>最经典的登录界面，登录按钮是否可点击</p>
+<ul>
+<li>先联合两个信号</li>
+<li>再解析信号结果</li>
+<li><p>最后把结果绑定到信号上</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">RAC(<span class="keyword">self</span>.loginBtn, enabled) = [RACSignal </div><div class="line">                                   combineLatest:@[<span class="keyword">self</span>.usernameTF.rac_textSignal, <span class="keyword">self</span>.passwordTF.rac_textSignal] </div><div class="line">                                   reduce:^<span class="keyword">id</span>(<span class="built_in">NSString</span> *username, <span class="built_in">NSString</span> *password)&#123;</div><div class="line">                                       <span class="keyword">return</span> @(username.length &gt; <span class="number">6</span> &amp;&amp; password.length &gt; <span class="number">8</span>);</div><div class="line">                               &#125;];</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>节流 <code>throttle</code></p>
+<ul>
+<li>表示 指定时间间隔内，不再发送信号</li>
+<li>这里添加 <code>throttle</code>， 表示在 0.5 秒内 text 没有改变时，才会进行搜索请求</li>
+<li><p>比如想搜索 <code>reactiveCocoa</code>，如果不添加 <code>throttle</code>，那么每输入一个字符，都会进行搜索请求，明显不是我们想要的。</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[[[self.searchTF rac_textSignal] </div><div class="line">    throttle:0.5] </div><div class="line">    subscribeNext:^(<span class="name">id</span> x) &#123;</div><div class="line">        NSLog(@<span class="string">"开始搜索请求==%@"</span>, x)<span class="comment">;</span></div><div class="line">&#125;]<span class="comment">;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>一通组合拳：</p>
+<ol>
+<li>判断用户名是否符合规则，</li>
+<li>用户名正确之后，进行判断密码是否符合规则</li>
+<li>密码正确，进行请求验证，成功之后返回请求结果</li>
+<li>返回主线程根据结果更新界面 UI</li>
+</ol>
+</li>
+</ol>
+<pre><code><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 1. 判断用户名</span></div><div class="line">- (RACSignal *)validUsernameSignal &#123;</div><div class="line">    </div><div class="line">    <span class="comment">// 防止循环引用</span></div><div class="line">    @weakify(<span class="keyword">self</span>);</div><div class="line">    <span class="comment">// 因为返回的是一个信号，所以需要创建</span></div><div class="line">    <span class="keyword">return</span> [RACSignal createSignal:^RACDisposable *(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</div><div class="line">        </div><div class="line">        @strongify(<span class="keyword">self</span>);</div><div class="line">            </div><div class="line">        [[[[[<span class="keyword">self</span>.usernameTF rac_textSignal]</div><div class="line">            <span class="comment">// skip, 忽略，表示忽略几次信号</span></div><div class="line">            <span class="comment">// 这里两次分别是，首次加载的时候，和 TF 第一次响应的时候，</span></div><div class="line">            <span class="comment">// 可以把后面的 distinctUntilChanged 注释，测试下效果</span></div><div class="line">            skip:<span class="number">2</span>] </div><div class="line">            <span class="comment">// map, 变换，把信号内容的类型变换为另一种类型</span></div><div class="line">            <span class="comment">// 把字符串根据长度转换为 bool 类型的对象</span></div><div class="line">            map:^<span class="keyword">id</span>(<span class="built_in">NSString</span> *value) &#123;</div><div class="line">                <span class="keyword">return</span> @(value.length &gt; <span class="number">5</span>);</div><div class="line">                <span class="comment">// distinctUntilChanged 只有值不同时，才会发送信号</span></div><div class="line">                <span class="comment">// 这里为了防止，在值不满足/已满足 要求时，还继续发送信号</span></div><div class="line">            &#125;] distinctUntilChanged] </div><div class="line">            <span class="comment">// 这里订阅的信息，就是转换后的 bool 类型的对象，非 1 即 0</span></div><div class="line">            subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">                <span class="keyword">if</span> ([x integerValue] == <span class="number">1</span>) &#123;</div><div class="line">                    [subscriber sendNext:<span class="string">@"用户名正确"</span>];</div><div class="line">                    [subscriber sendCompleted];</div><div class="line">                    <span class="built_in">NSLog</span>(<span class="string">@"-------用户名正确"</span>);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="built_in">NSLog</span>(<span class="string">@"-------用户名错误"</span>);</div><div class="line">                &#125;</div><div class="line">                </div><div class="line">                </div><div class="line">            &#125;];</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span>; </div><div class="line">    &#125;];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 3. 请求验证</span></div><div class="line">- (RACSignal *)loginSuccessSignalWithPassword: (<span class="built_in">NSString</span> *)psw &#123;</div><div class="line">    </div><div class="line">    </div><div class="line">    <span class="keyword">return</span> [RACSignal createSignal:^RACDisposable *(<span class="keyword">id</span>&lt;RACSubscriber&gt; subscriber) &#123;</div><div class="line">        </div><div class="line">        <span class="comment">/**</span></div><div class="line">         * 这里可以进行请求验证用户名密码，并返回结果</div><div class="line">         */</div><div class="line">        <span class="built_in">NSString</span> *str = <span class="string">@"用户信息 Data"</span>;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"----登陆成功并返回用户信息 Data"</span>);</div><div class="line">        </div><div class="line">        <span class="built_in">NSDictionary</span> *dic = @&#123;<span class="string">@"data"</span>: str&#125;;</div><div class="line">        </div><div class="line">        [subscriber sendNext:dic];</div><div class="line">        [subscriber sendCompleted];</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</div><div class="line">    &#125;];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 2、4、密码验证和界面更新</span></div><div class="line">- (<span class="keyword">void</span>)loginResult &#123;</div><div class="line">    </div><div class="line">        <span class="comment">// 用户名的判断</span></div><div class="line">    [[[[[[[<span class="keyword">self</span> validUsernameSignal]</div><div class="line">        <span class="comment">// then, 只有前面的信号 发送信息，并完成才会继续</span></div><div class="line">        <span class="comment">// 下面进行 密码的判断</span></div><div class="line">        then:^RACSignal *&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">self</span>.passwordTF.rac_textSignal;</div><div class="line">        &#125;] </div><div class="line">        <span class="comment">// throttle，间隔 0.5 秒，</span></div><div class="line">        <span class="comment">// 防止在输入密码过程中不断发送信号，优化性能</span></div><div class="line">        throttle:<span class="number">0.5</span>] </div><div class="line">        <span class="comment">// filter，过滤 ，只有符合要求的才能继续</span></div><div class="line">        filter:^<span class="built_in">BOOL</span>(<span class="built_in">NSString</span> *value) &#123;</div><div class="line">            <span class="keyword">return</span> [value length] &gt; <span class="number">6</span>;</div><div class="line">        &#125;] </div><div class="line">        <span class="comment">// flattenMap 根据源信号的内容生成新的信号，后续订阅、监听的就是新信号的内容</span></div><div class="line">        <span class="comment">// 常用于在信号嵌套中，处理信号中的信号</span></div><div class="line">        <span class="comment">// 这里使用 flattenMap 生成新的信号，并且在信号内发送登录结果信息，以便后续传递信息</span></div><div class="line">        flattenMap:^RACStream *(<span class="built_in">NSString</span> *value) &#123;</div><div class="line">            <span class="keyword">return</span> [<span class="keyword">self</span> loginSuccessSignalWithPassword:value];</div><div class="line">        &#125;]</div><div class="line">        <span class="comment">// deliverOn 切换线程，</span></div><div class="line">        <span class="comment">// RACScheduler, 即 RAC 中的多线程</span></div><div class="line">        <span class="comment">// 切换为主线程</span></div><div class="line">        deliverOn:[RACScheduler mainThreadScheduler]] </div><div class="line">        <span class="comment">// 订阅信号，获取信号传递的数据 data</span></div><div class="line">        subscribeNext:^(<span class="keyword">id</span> x) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"获取信息 \r\n%@，\r\n更新 UI"</span>, x);</div><div class="line">        &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</code></pre><h2 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h2><ul>
+<li><p><code>ReactiveCocoa</code> 虽然说是思想上的巨大改变，但我更倾向于把它当做一种新型语法、更简便的语法来使用，在使用过程中，自然而然地就会体会它跟你以往编程的不同。使用多了，就会发现，原来这就是函数式响应式编程。</p>
+</li>
+<li><p>理论是实践出来的，在你不懂理论的时候，那就赶紧实践吧。</p>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;UIControl&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;监听 control 点击&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;从此告别 &lt;code&gt;addTarget&lt;/code&gt; 和 &lt;code&gt;btnClick&lt;/code&gt;&lt;/p&gt;
+&lt;figure class=&quot;highligh
+    
+    </summary>
+    
+      <category term="ReactiveCocoa" scheme="http://lionwy.github.io/categories/ReactiveCocoa/"/>
+    
+    
+      <category term="RAC" scheme="http://lionwy.github.io/tags/RAC/"/>
+    
+      <category term="编程思想" scheme="http://lionwy.github.io/tags/%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/"/>
+    
+  </entry>
   
   <entry>
     <title>Autorelease 详解</title>
