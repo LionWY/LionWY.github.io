@@ -119,7 +119,7 @@
 从此告别 addTarget 和 btnClick
 1234[[self.loginBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(UIButton *btn) &amp;#123;   // btn, 即 self.loginBtn   // 这里">
 <meta property="og:image" content="http://oeb4c30x3.bkt.clouddn.com/20170226195047_mJevEQ_ng-32703.jpeg">
-<meta property="og:updated_time" content="2017-02-27T01:22:52.000Z">
+<meta property="og:updated_time" content="2017-03-07T03:44:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="好玩的 RAC">
 <meta name="twitter:description" content="UIControl
@@ -426,7 +426,7 @@
 <li><p>一旦键盘 frame 有所变化，就进入 block 里面</p>
 </li>
 <li><p>内部已经进行通知释放，不需要再 <code>dealloc</code> 中 移除</p>
-<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillChangeFrameNotification object:nil] subscribeNext:^(<span class="name">NSNotification</span> *notification) &#123;</div><div class="line">  NSLog(@<span class="string">"-----%@"</span>, notification.description)<span class="comment">;</span></div><div class="line">&#125;]<span class="comment">;</span></div></pre></td></tr></table></figure>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">[[[[NSNotificationCenter defaultCenter] </div><div class="line">    rac_addObserverForName:UIKeyboardWillChangeFrameNotification object:nil]</div><div class="line">    // 这句不可少，表示 当 self 将要 dealloc 的时候，就要释放 通知</div><div class="line">    takeUntil:self.rac_willDeallocSignal] </div><div class="line">    subscribeNext:^(<span class="name">NSNotification</span> *notification) &#123;</div><div class="line">        NSLog(@<span class="string">"-----%@"</span>, notification.description)<span class="comment">;</span></div><div class="line">&#125;]<span class="comment">;</span></div></pre></td></tr></table></figure>
 </li>
 <li><p>发送通知还是之前的办法</p>
 <figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[NSNotificationCenter defaultCenter] postNotificationName:@<span class="string">"通知名称"</span> object:nil]<span class="comment">;</span></div></pre></td></tr></table></figure>
