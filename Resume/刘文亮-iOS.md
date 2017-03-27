@@ -6,7 +6,7 @@
 * 工作年限：3-4年
 * 手机：18516507994
 * QQ ： 994955082
-* 邮箱：lion.liu.2016@gmail.com
+* 邮箱：lion.liu.2016@gmail.com/18516507994@163.com
 * 技术博客：https://lionwy.github.io/
 * GitHub：https://github.com/LionWY
 * 期望职位：iOS开发
@@ -47,13 +47,6 @@
 这是一个基于 iPad 端与 PC 端交互的项目，服务于公司内部销售，包括有合同签订，事项提醒，学生课程安排，业绩报表等主要功能。
 期间，因 iPad 电话通讯需求，进行过流量电话的研究，跟第三方沟通，SDK 的研究，以及简单功能的实现。
 
-## 书籍列表：
-
-* 《Effective Objective-C 2.0 编写高质量 iOS 与 OS X 代码的52个有效方法》
-* 《Objective-C 高级编程 iOS 与 OS X 多线程和内存管理》
-* 《iOS-CoreAnimation》
-* 《Swifter Tips》
-* 《Advanced Swift》
 
 ## 致谢：
 感谢您花时间阅读我的简历，期待有机会和您共事。
