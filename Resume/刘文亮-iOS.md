@@ -6,7 +6,7 @@
 * 工作年限：3-4年
 * 手机：18516507994
 * QQ ： 994955082
-* 邮箱：lion.liu.2016@gmail.com/18516507994@163.com
+* 邮箱：lion.liu.2016@gmail.com / 18516507994@163.com
 * 技术博客：https://lionwy.github.io/
 * GitHub：https://github.com/LionWY
 * 期望职位：iOS开发
@@ -14,16 +14,15 @@
 ## 技能清单：
 
 * Objective-C / Swift: 
-    * 熟悉 API，自定义各种 UI 控件，按需修改第三方库
+    * 熟悉 API，自定义 UI 控件，按需修改第三方库
     * 熟悉 OC 底层运行时原理，动态语言机制
-    * 熟悉函数响应式编程思想，掌握使用 ReactiveCocoa，以及与 MVVM 的搭配使用
+    * 了解函数式响应式编程思想，掌握使用 ReactiveCocoa，以及与 MVVM 的搭配使用
     * 掌握 OOP、AOP、POP 常用编程思想
     * 掌握基本的动画设计，UIView 和 CALayer 的搭配使用
     * 熟悉版本控制，具有良好的编码习惯　
 
 * React Native: 
-    * 掌握 RN 的基本使用，Flex 布局
-    * 熟悉 RN 组件和 API，熟练使用第三方组件
+    * 掌握 RN 的基本使用，Flex 布局，第三方组件的合理运用
     * 可以在 Native 和 JS 间相互通信，交叉使用
 
 ## 工作经历：
