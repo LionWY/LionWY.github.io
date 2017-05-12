@@ -11,7 +11,9 @@
 3. 如果最后 UIApplication 不能处理，就抛弃，不处理
 
 
-## 方法
+## 实践
+
+![](http://oeb4c30x3.bkt.clouddn.com/2017-05-12-14945824542914.jpg)
 
 1. 控制当前 `view` 的点击区域，即，当前 `view` 的部分区域是否可点击
     * [方法 1 处理点击](https://github.com/LionWY/LionWY.github.io/blob/master/blog/touch响应事件/TouchTest/TouchTest/TouchView.m#L22-L30)
