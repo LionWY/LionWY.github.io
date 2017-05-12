@@ -10,16 +10,19 @@
 
 3. 如果最后 UIApplication 不能处理，就抛弃，不处理
 
+
 ## 方法
 
 1. 控制当前 `view` 的点击区域，即，当前 `view` 的部分区域是否可点击
+    * [方法 1 处理点击](https://github.com/LionWY/LionWY.github.io/blob/master/blog/touch响应事件/TouchTest/TouchTest/TouchView.m#L22-L30)
 
     ```
     - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
     ```
 
 2. 决定处理点击事件的 对象
-
+    * [方法 2 ](https://github.com/LionWY/LionWY.github.io/blob/master/blog/touch响应事件/TouchTest/TouchTest/TouchView.m#L38-L46)
+   
     ```
     - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
     ```
